@@ -3,19 +3,23 @@ import "./MovieCard.css";
 
 export default function MovieCard({ movie }) {
 
-  const [watchlist, setWatchlist] = useState(false);
+const [watchlist, setWatchlist] = useState(false);
 const handleWatchlist = () => {
 
   setWatchlist(!watchlist);
 
   alert(`${movie.title} added to Watchlist`);
 };
+ const stars = Array.from({ length: movie.rating }, (_, i) => "⭐");
   return (
    <div className="movie-card">
 
   <div className="rating-badge">
     ⭐ {movie.rating}
   </div>
+  {/* <div className="rating-badge">
+  {stars.join("")}
+</div> */}
 
   <img
     src={movie.image}
