@@ -1,51 +1,52 @@
 import React, { useState } from "react";
 import "./MovieCard.css";
 
-export default function MovieCard({ movie }) {
+export default function MovieCard({ movie, setSelectedMovie }) {
 
-const [watchlist, setWatchlist] = useState(false);
-const handleWatchlist = () => {
+  const [watchlist, setWatchlist] = useState(false);
 
-  setWatchlist(!watchlist);
+  const imageUrl =
+    movie.image?.medium ||
+    "https://static.tvmaze.com/images/no-img/no-img-portrait-text.png";
 
-  alert(`${movie.title} added to Watchlist`);
-};
- const stars = Array.from({ length: movie.rating }, (_, i) => "⭐");
   return (
-   <div className="movie-card">
 
-  <div className="rating-badge">
-    ⭐ {movie.rating}
-  </div>
-  {/* <div className="rating-badge">
-  {stars.join("")}
-</div> */}
+    <div className="movie-card">
 
-  <img
-    src={movie.image}
-    alt={movie.title}
-    className="movie-image"
-  />
+      <img
+        src={imageUrl}
+        alt={movie.name}
+        className="movie-image"
+      />
 
-  <div className="movie-content">
-        <h2>{movie.title}</h2>
+      <div className="movie-content">
+
+        <h2>{movie.name}</h2>
 
         <p>
-          <strong>Genre:</strong> {movie.genre}
+          <strong>Language:</strong> {movie.language}
         </p>
 
         <p>
-          <strong>Short Description:</strong> 
+          <strong>Rating:</strong>
+          {" "}
+          {movie.rating?.average || "N/A"}
         </p>
 
-        <p className="description">
-          {movie.description}
-        </p>
-
-        <button onClick={handleWatchlist}>
-            {watchlist ? "Added" : "Add to Watchlist"}
+        <button
+          onClick={() => setSelectedMovie(movie)}
+        >
+          View Details
         </button>
+
+        <button
+          onClick={() => setWatchlist(!watchlist)}
+        >
+          {watchlist ? "Added ✅" : "Add to Watchlist"}
+        </button>
+
       </div>
+
     </div>
   );
 }

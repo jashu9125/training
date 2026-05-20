@@ -1,3 +1,5 @@
+Date :- 19/05/2026 
+#Task-3
 # Brief Explanation or Implementation Approach
 
 This project is a Movie Recommendation Web App built using React.js with a focus on UI interactivity, filtering, and theme switching.
@@ -51,3 +53,32 @@ This project is a Movie Recommendation Web App built using React.js with a focus
 5. Clean separation of UI and logic
 
 Here in this task i have been deployed an Movie Recommendation Card using funcationality components like props and list rendering components like [.map()] function and css concepts of flex box and grid components. 
+
+-------------------------------------------------------------------------------------------------
+Date :- 20/05/2026 
+Task-4(API's):-
+1. The project is implemented as a React Movie Recommendation App that fetches movie data dynamically from the TVMaze API and displays it in a user-friendly interface.
+
+2. API integration is implemented using the [fetch()] method with the TVMaze API link:
+
+```js id="ikjlwm"
+https://api.tvmaze.com/search/shows?q=${search}
+```
+
+The [${search}] value changes dynamically based on the user’s input.
+
+3. React Hooks such as [useState] are used to manage application states like movie data, search text, loading status, popup details, errors, and dark mode theme.
+
+4. The [useEffect()] hook is used to automatically call the API and load default movie data when the application starts.
+
+5. Component reusability is achieved by separating the UI into reusable components such as [MovieCard] and [MoviePopup], making the code modular and easier to maintain.
+
+6. The [MovieCard] component is reused multiple times using the [map()] function to display movie information dynamically for every API result.
+
+7. Responsive design is implemented using CSS Grid, Flexbox, and responsive layouts so the application adapts properly to different screen sizes and devices.
+
+8. UI quality is improved with modern styling features such as hover effects, popup modals, dark/light mode toggle, gradients, rounded corners, and smooth spacing for better user experience.
+
+9. Clean coding practices are followed by organizing files into components, using meaningful variable names, applying conditional rendering, handling API errors properly, and keeping logic separated from styling.
+
+10. Overall, the application demonstrates important React concepts including API integration, hooks, state management, reusable components, responsive UI development, conditional rendering, and modern frontend design practices.

@@ -1,113 +1,131 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MovieCard from "./components/MovieCard";
+import MoviePopup from "./components/MoviePopup";
 import "./App.css";
 
-import pokiri from "./pokiri.jpg";
-import darling from "./darling.jpg";
-import aarya from "./aarya.jpg";
-import arundathi from "./arundathi.jpg";
-import jathirathnalu from "./jathirathnalu.jpg";
-import karthikeya from "./karthikeya.jpg";
-
 function App() {
-    const [search, setSearch] = useState("");
-    const [genre, setGenre] = useState("All");
-    const [darkMode, setDarkMode] = useState(true);
 
-    const movies = [
-        {
-            title: "Pokiri",
-            genre: "Action",
-            rating: 5,
-            description: "An undercover police officer infiltrates the underworld.",
-            image: pokiri,
-        },
+  const [movies, setMovies] = useState([]);
+  const [search, setSearch] = useState("batman");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [darkMode, setDarkMode] = useState(true);
 
-        {
-            title: "Darling",
-            genre: "Romance",
-            rating: 4,
-            description: "A cheerful young man falls in love.",
-            image: darling,
-        },
+  const fetchMovies = async () => {
 
-        {
-            title: "Aarya",
-            genre: "Drama",
-            rating: 4,
-            description: "A free-spirited young man fights for love.",
-            image: aarya,
-        },
+    try {
 
-        {
-            title: "Arundathi",
-            genre: "Horror / Fantasy",
-            rating: 5,
-            description:
-                "A brave queen's spirit protects her legacy from evil forces.",
-            image: arundathi,
-        },
+      setLoading(true);
+      setError("");
 
-        {
-            title: "Jathi Ratnalu",
-            genre: "Comedy",
-            rating: 4,
-            description:
-                "Three innocent men get caught in a hilarious political conspiracy.",
-            image: jathirathnalu,
-        },
+      const response = await fetch(
+        `https://api.tvmaze.com/search/shows?q=${search}`
+      );
 
-        {
-            title: "Karthikeya",
-            genre: "Mystery / Thriller",
-            rating: 4,
-            description:
-                "A medical student investigates mysterious events happening at a temple village.",
-            image: karthikeya,
-        },
-    ];
+      const data = await response.json();
 
-    const filteredMovies = movies.filter((movie) => {
-        return (
-            movie.title.toLowerCase().includes(search.toLowerCase()) &&
-            (genre === "All" || movie.genre === genre)
-        );
-    });
+      console.log(data);
 
-    return (
-        <div className={darkMode ? "app dark" : "app light"}>
-            <h1> Movie Recommendation Card </h1>{" "}
-            <div className="controls">
-                <input
-                    type="text"
-                    placeholder="Search movies..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />{" "}
-                <select onChange={(e) => setGenre(e.target.value)}>
-                    <option value="All"> All </option>{" "}
-                    <option value="Action"> Action </option>{" "}
-                    <option value="Romance"> Romance </option>{" "}
-                    <option value="Drama"> Drama </option>{" "}
-                    <option value="Horror / Fantasy"> Horror / Fantasy </option>{" "}
-                    <option value="Comedy"> Comedy </option>{" "}
-                    <option value="Mystery / Thriller"> Mystery / Thriller </option>{" "}
-                </select>{" "}
-                <button
-                    onClick={() => setDarkMode(!darkMode)}
-                    className={darkMode ? "btn-dark" : "btn-light"}
-                >
-                    {darkMode ? "Light Mode ☀️" : "Dark Mode 🌙"}
-                </button>{" "}
-            </div>{" "}
-            <div className="movies-container">
-                {" "}
-                {filteredMovies.map((movie, index) => (
-                    <MovieCard key={index} movie={movie} />
-                ))}{" "}
-            </div>{" "}
-        </div>
-    );
+      if (Array.isArray(data)) {
+
+        setMovies(data);
+
+      } else {
+
+        setMovies([]);
+      }
+
+    } catch (err) {
+
+      console.log(err);
+
+      setError("Failed to fetch movies");
+
+      setMovies([]);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+
+    fetchMovies();
+
+  }, []);
+
+  const handleSubmit = (e) => {
+
+    e.preventDefault();
+
+    fetchMovies();
+  };
+
+  return (
+
+    <div className={darkMode ? "app dark" : "app light"}>
+
+      <h1>🎬 Movie Recommendation App</h1>
+
+      <form className="controls" onSubmit={handleSubmit}>
+
+        <input
+          type="text"
+          placeholder="Search movies..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <button type="submit">
+          Search
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setDarkMode(!darkMode)}
+        >
+          {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+        </button>
+
+      </form>
+
+      {loading && <h2>Loading...</h2>}
+
+      {error && <h2>{error}</h2>}
+
+      <div className="movies-container">
+
+        {movies.length > 0 ? (
+
+          movies.map((item) => (
+
+            <MovieCard
+              key={item.show.id}
+              movie={item.show}
+              setSelectedMovie={setSelectedMovie}
+            />
+
+          ))
+
+        ) : (
+
+          !loading && <h2>No Movies Found</h2>
+
+        )}
+
+      </div>
+
+      {selectedMovie && (
+
+        <MoviePopup
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
+
+      )}
+
+    </div>
+  );
 }
 
 export default App;
