@@ -1,17 +1,3 @@
-// import LoginPage from "./loginpage/LoginPage";
-
-// function App() {
-//   return (
-    
-//   <div>
-//     <LoginPage/>
-//   </div>
-//   );
-// }
-
-// export default App;
-
-
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 

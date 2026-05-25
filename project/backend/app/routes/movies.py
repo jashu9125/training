@@ -1,7 +1,10 @@
 from fastapi import APIRouter, HTTPException
+
+# ✅ FIXED IMPORT
 from app.services.omdb_service import search_movies
 
 router = APIRouter()
+
 
 @router.get("/movies")
 def home_movies():
@@ -10,21 +13,17 @@ def home_movies():
 
     return data
 
-# @router.get("/search")
-# def search(title: str):
-
-#     data = search_movies(title)
-
-#     return data.get("Search", [])
 
 @router.get("/movies/search")
 def search(title: str):
+
     data = search_movies(title)
 
     if data.get("Response") == "False":
-        return []   # return empty list instead of error
+        return []
 
     return data.get("Search", [])
+
 
 @router.get("/movies/{title}")
 def search_by_title(title: str):
@@ -39,5 +38,3 @@ def search_by_title(title: str):
         )
 
     return data
-
-

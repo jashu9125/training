@@ -1,0 +1,42 @@
+#Task-6
+
+1. Built a full-stack Movie Search Application using React.js for the frontend and FastAPI for the backend.
+
+2. Implemented user authentication with Register and Login functionality using JWT token-based authentication.
+
+3. Used FastAPI routes to handle APIs for user registration, login, movie search, and favorite movies management.
+
+4. Integrated the OMDb API to fetch movie details dynamically based on the movie title entered by the user.
+
+5. Stored user details and favorite movies data using SQLite database with SQLAlchemy ORM.
+
+6. Used password hashing with bcrypt and Passlib to securely store user passwords in the database.
+
+7. Implemented protected APIs using Bearer Token authentication for adding and viewing favorite movies.
+
+8. Created responsive movie cards in React with movie poster, title, year, and type information.
+
+9. Added “Add to Favorites” functionality with duplicate favorite checking to prevent repeated entries.
+
+10. Improved frontend UI using separate CSS files, loading indicators, error handling, alerts, and responsive grid layouts for better user experience.
+
+
+11. React Hooks like `useState` were used to manage form inputs, loading states, movie data, and error messages in the frontend.
+
+12. React Router was used for navigation between Login, Register, and Movies pages without reloading the application.
+
+13. Fetch API was used to connect the React frontend with FastAPI backend APIs for login, registration, movie search, and favorites.
+
+14. FastAPI was used to create REST APIs with routes for authentication, movie searching, and favorite movie operations.
+
+15. SQLAlchemy ORM was used to interact with the SQLite database and manage users and favorite movie records.
+
+16. JWT authentication was implemented using access tokens to secure protected routes like favorites APIs.
+
+17. Passlib bcrypt hashing was used to securely hash user passwords before storing them in the database.
+
+18. OMDb API integration was implemented in the backend service layer to fetch real-time movie data.
+
+19. Conditional rendering was used in React to display loading messages, errors, and API responses dynamically.
+
+20. Separate CSS files were used to style components and create a clean, responsive user interface.

@@ -1,43 +1,41 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../services/api";
 
 const LoginPage = () => {
-
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Handle Login
-  const handleSubmit = (e) => {
-
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Demo Login Validation
-    if (email === "admin@gmail.com" && password === "123456") {
+    try {
+      setLoading(true);
+      setError("");
 
-      alert("Login Successful!");
+      await loginUser({ email, password });
 
-      // Navigate to Movies Page
+      alert("Login Successful");
       navigate("/movies");
 
-    } else {
-
-      alert("Invalid Email or Password");
-
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-
     <div className="login-container">
-
-      <form
-        className="login-form"
-        onSubmit={handleSubmit}
-      >
-
+      <form className="login-form" onSubmit={handleSubmit}>
         <h1>Login</h1>
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        {loading && <p>Loading...</p>}
 
         <input
           type="email"
@@ -55,12 +53,8 @@ const LoginPage = () => {
           required
         />
 
-        <button type="submit">
-          Login
-        </button>
-
+        <button type="submit">Login</button>
       </form>
-
     </div>
   );
 };

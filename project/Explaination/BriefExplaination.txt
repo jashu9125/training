@@ -1,10 +1,12 @@
-This project is a **Full Stack Movie Search Application** built using **FastAPI**, **SQLite**, **SQLAlchemy**, **JWT Authentication**, and **React.js**.
+#Task-5
 
-### Backend Implementation (FastAPI)
+This project is a Full Stack Movie Search Application built using FastAPI, SQLite, SQLAlchemy, JWT Authentication, and React.js.
+
+# Backend Implementation (FastAPI)
 
 The backend is developed using FastAPI and follows a modular architecture.
 
-#### Database Configuration
+# Database Configuration
 
 * SQLite is used as the database.
 * SQLAlchemy is used as the ORM.
@@ -12,7 +14,7 @@ The backend is developed using FastAPI and follows a modular architecture.
 * `SessionLocal` manages database sessions.
 * `Base.metadata.create_all()` automatically creates required tables.
 
-#### User Authentication
+# User Authentication
 
 Authentication functionality includes:
 
@@ -28,11 +30,11 @@ Flow:
 3. A JWT access token is generated after successful login.
 4. Protected routes use token verification to identify authenticated users.
 
-#### Models
+# Models
 
 Two database models are implemented:
 
-**User Model**
+*User Model
 
 * Stores:
 
@@ -40,7 +42,7 @@ Two database models are implemented:
   * email
   * password
 
-**Favorite Model**
+*Favorite Model
 
 * Stores:
 
@@ -50,13 +52,13 @@ Two database models are implemented:
   * user_id
 * Connected to the User table using a foreign key relationship.
 
-#### Movie API Integration
+# Movie API Integration
 
 * OMDb API is integrated using the `requests` library.
 * Movies can be searched dynamically using movie titles.
 * If no movie is found, an empty list or error response is returned.
 
-#### Favorites Feature
+# Favorites Feature
 
 Authenticated users can:
 
@@ -66,20 +68,18 @@ Authenticated users can:
 
 Duplicate favorite entries are prevented using database checks.
 
-#### CORS Middleware
+# CORS Middleware
 
 CORS middleware is enabled to allow communication between:
 
 * React frontend
 * FastAPI backend
 
----
-
-### Frontend Implementation (React.js)
+# Frontend Implementation (React.js)
 
 The frontend is developed using React.js with React Router.
 
-#### Routing
+# Routing
 
 Routes implemented:
 
@@ -87,13 +87,13 @@ Routes implemented:
 * `/register` → Registration Page
 * `/movies` → Movie Search Page
 
-#### Register Page
+# Register Page
 
 * Uses React `useState()` for form handling.
 * Validates input fields.
 * Displays success/error alerts.
 
-#### Movie Search Page
+# Movie Search Page
 
 Features implemented:
 
@@ -110,16 +110,14 @@ Each movie card displays:
 * Release Year
 * Movie Type
 
-#### Styling
+# Styling
 
 * CSS Flexbox and Grid are used for responsive UI.
 * Gradient backgrounds and card layouts improve user experience.
 
----
+# Technologies Used
 
-### Technologies Used
-
-#### Backend
+# Backend
 
 * FastAPI
 * SQLAlchemy
@@ -129,18 +127,18 @@ Each movie card displays:
 * Python Requests
 * OMDb API
 
-#### Frontend
+# Frontend
 
 * React.js
 * React Router
 * CSS3
 
----
-
-### Overall Workflow
+ Overall Workflow
 
 1. User registers and logs in.
 2. Backend authenticates user and generates JWT token.
 3. User searches movies using OMDb API.
 4. Users can manage favorite movies securely.
 5. React frontend communicates with FastAPI backend through REST APIs.
+
+--------------------------------------------------------------------------------------
