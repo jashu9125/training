@@ -15,32 +15,31 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"message": "Backend is running"}
+    return {
+        "message": "Backend is running"
+    }
 
 
 # =========================
-# CORS CONFIGURATION
+# CORS
 # =========================
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
 
-
 app.add_middleware(
     CORSMiddleware,
-
     allow_origins=origins,
-
     allow_credentials=True,
-
     allow_methods=["*"],
-
     allow_headers=["*"],
 )
 
 
+# =========================
 # ROUTES
+# =========================
 app.include_router(auth.router)
 
 app.include_router(movies.router)

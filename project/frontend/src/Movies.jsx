@@ -5,9 +5,13 @@ import "./Movies.css";
 function Movies() {
 
   const [movies, setMovies] = useState([]);
+
   const [search, setSearch] = useState("");
+
   const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState("");
+
 
   // FETCH MOVIES
   const fetchMovies = async () => {
@@ -31,14 +35,9 @@ function Movies() {
 
       const data = await response.json();
 
-      console.log("API RESPONSE:", data);
+      console.log(data);
 
-      const moviesArray =
-        data?.Search ||
-        data?.results ||
-        (Array.isArray(data) ? data : []);
-
-      setMovies(moviesArray);
+      setMovies(data);
 
     } catch (err) {
 
@@ -53,19 +52,24 @@ function Movies() {
   };
 
 
-  // ADD FAVORITES
+  // ADD FAVORITE
   const addToFavorites = async (movie) => {
 
+    const token =
+      localStorage.getItem("token");
+
+    if (!token) {
+
+      alert(
+        "Session expired. Please login again."
+      );
+
+      window.location.href = "/";
+
+      return;
+    }
+
     try {
-
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-
-        alert("Please login first");
-
-        return;
-      }
 
       const response = await fetch(
         "http://127.0.0.1:8000/favorites",
@@ -73,8 +77,11 @@ function Movies() {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`,
           },
 
           body: JSON.stringify({
@@ -87,17 +94,19 @@ function Movies() {
 
       const data = await response.json();
 
+      console.log(data);
+
       if (!response.ok) {
 
         alert(
           data?.detail?.message ||
-          "Movie already in favorites"
+          "Already in favorites"
         );
 
         return;
       }
 
-      alert("Movie added to favorites");
+      alert("Added to favorites");
 
     } catch (error) {
 
@@ -116,24 +125,19 @@ function Movies() {
         🎬 Movie Search App
       </h1>
 
+
       <div className="searchBox">
 
         <input
-          type="text"
-          placeholder="Search movies..."
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
           }
-
-          onKeyDown={(e) => {
-
-            if (e.key === "Enter") {
-
-              fetchMovies();
-            }
-          }}
-
+          onKeyDown={(e) =>
+            e.key === "Enter" &&
+            fetchMovies()
+          }
+          placeholder="Search movies..."
           className="input"
         />
 
@@ -153,7 +157,6 @@ function Movies() {
         </h3>
       )}
 
-
       {error && (
         <h3 className="error">
           {error}
@@ -161,9 +164,15 @@ function Movies() {
       )}
 
 
+      {!loading &&
+        movies.length === 0 && (
+          <h3>No movies found</h3>
+      )}
+
+
       <div className="grid">
 
-        {movies?.map((movie, index) => (
+        {movies.map((movie, index) => (
 
           <div
             key={movie.imdbID || index}
@@ -172,24 +181,12 @@ function Movies() {
 
             <img
               src={
-                movie.Poster &&
                 movie.Poster !== "N/A"
                   ? movie.Poster
-                  : "https://placehold.co/300x450?text=No+Image"
+                  : "https://placehold.co/300x450"
               }
-
               alt={movie.Title}
-
               className="image"
-
-              onError={(e) => {
-
-                e.target.onerror = null;
-
-                e.target.src =
-                  "https://placehold.co/300x450?text=Image+Not+Found";
-
-              }}
             />
 
             <h3 className="movieTitle">
@@ -200,13 +197,8 @@ function Movies() {
               Year: {movie.Year}
             </p>
 
-            <p className="movieText">
-              Type: {movie.Type}
-            </p>
-
             <button
               className="favoriteButton"
-
               onClick={() =>
                 addToFavorites(movie)
               }
@@ -215,7 +207,6 @@ function Movies() {
             </button>
 
           </div>
-
         ))}
 
       </div>

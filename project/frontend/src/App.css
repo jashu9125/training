@@ -36,3 +36,37 @@
     transform: rotate(360deg);
   }
 }
+
+.navbar {
+  padding: 15px;
+  background: #222;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  color: #ffcc00;
+}
+
+.logout-btn {
+  margin-left: auto;
+  padding: 8px 14px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: darkred;
+}

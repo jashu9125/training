@@ -1,15 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.models.user import User
-from app.schemas.user_schema import UserRegister, UserLogin
+
+from app.schemas.user_schema import UserRegister
+
 from app.services.auth_service import (
     hash_password,
     verify_password,
     create_access_token
 )
-from app.utils.response import success_response, error_response
+
+from app.utils.response import (
+    success_response,
+    error_response
+)
 
 router = APIRouter()
 
@@ -18,9 +25,14 @@ router = APIRouter()
 # REGISTER
 # =========================
 @router.post("/register")
-def register(user: UserRegister, db: Session = Depends(get_db)):
+def register(
+    user: UserRegister,
+    db: Session = Depends(get_db)
+):
 
-    existing_user = db.query(User).filter(User.email == user.email).first()
+    existing_user = db.query(User).filter(
+        User.email == user.email
+    ).first()
 
     if existing_user:
         raise HTTPException(
@@ -49,31 +61,38 @@ def register(user: UserRegister, db: Session = Depends(get_db)):
 
 
 # =========================
-# LOGIN (FIXED)
+# LOGIN
 # =========================
 @router.post("/login")
-def login(user: UserLogin, db: Session = Depends(get_db)):
+def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
 
-    db_user = db.query(User).filter(User.email == user.email).first()
+    db_user = db.query(User).filter(
+        User.email == form_data.username
+    ).first()
 
     if not db_user:
         raise HTTPException(
             status_code=401,
-            detail=error_response("Invalid email")
+            detail="Invalid email"
         )
 
-    if not verify_password(user.password, db_user.password):
+    if not verify_password(
+        form_data.password,
+        db_user.password
+    ):
         raise HTTPException(
             status_code=401,
-            detail=error_response("Invalid password")
+            detail="Invalid password"
         )
 
-    token = create_access_token({"sub": db_user.email})
-
-    return success_response(
-        "Login successful",
-        {
-            "access_token": token,
-            "token_type": "bearer"
-        }
+    access_token = create_access_token(
+        {"sub": db_user.email}
     )
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
