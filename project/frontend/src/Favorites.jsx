@@ -1,25 +1,17 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useEffect, useState, useCallback } from "react";
+import config from "./config";
 import "./Movies.css";
 
-function Favorites() {
-
+const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-
-  const [error, setError] = useState("");
-
-  const token = localStorage.getItem("token");
-
-
   // FETCH FAVORITES
-  const fetchFavorites = async () => {
-
+  const fetchFavorites = useCallback(async () => {
     try {
+      const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://127.0.0.1:8000/favorites",
+        `${config.BASE_URL}/favorites`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -29,138 +21,79 @@ function Favorites() {
 
       const data = await response.json();
 
-      console.log(data);
+      console.log("Favorites Response:", data);
 
-      if (data.success) {
-
-        setFavorites(data.data);
-
-      } else {
-
-        setError("Failed to load favorites");
-      }
-
+      // FIX HERE
+      setFavorites(data.favorites || data.data || []);
     } catch (error) {
-
-      console.log(error);
-
-      setError("Server Error");
-
-    } finally {
-
-      setLoading(false);
+      console.log("Error fetching favorites:", error);
     }
-  };
-
-
-  // REMOVE FAVORITE
-  const removeFavorite = async (movie_id) => {
-
-    try {
-
-      const response = await fetch(
-        `http://127.0.0.1:8000/favorites/${movie_id}`,
-        {
-          method: "DELETE",
-
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      console.log(data);
-
-      setFavorites(
-        favorites.filter(
-          (movie) => movie.movie_id !== movie_id
-        )
-      );
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert("Failed to remove");
-    }
-  };
-
-
-  useEffect(() => {
-
-    fetchFavorites();
-
   }, []);
 
+  // REMOVE FAVORITE
+  const removeFavorite = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
 
-  if (loading) {
+      await fetch(
+        `${config.BASE_URL}/favorites/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    return (
-      <h2 className="loading">
-        Loading favorites...
-      </h2>
-    );
-  }
+      fetchFavorites();
+    } catch (error) {
+      console.log("Delete error:", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchFavorites();
+  }, [fetchFavorites]);
 
   return (
-
-    <div className="container">
-
-      <h1 className="heading">
-        ❤️ My Favorites
+    <div className="favorites-container">
+      <h1 className="favorites-title">
+        Favorite Movies
       </h1>
 
-      {error && (
-        <h3 className="error">
-          {error}
-        </h3>
-      )}
-
       {favorites.length === 0 ? (
-
-        <h2>No favorite movies yet</h2>
-
+        <h3 className="no-favorites">
+          No favorite movies added
+        </h3>
       ) : (
-
-        <div className="grid">
-
+        <div className="favorites-grid">
           {favorites.map((movie) => (
-
             <div
-              key={movie.movie_id}
-              className="card"
+              key={movie.id}
+              className="favorite-card"
             >
-
               <img
                 src={movie.poster}
                 alt={movie.title}
-                className="image"
+                className="favorite-image"
               />
 
-              <h3 className="movieTitle">
+              <h3 className="favorite-title">
                 {movie.title}
               </h3>
 
               <button
-                className="favoriteButton"
-                onClick={() =>
-                  removeFavorite(movie.movie_id)
-                }
+                className="remove-btn"
+                onClick={() => removeFavorite(movie.id)}
               >
-                ❌ Remove Favorite
+                Remove
               </button>
-
             </div>
           ))}
-
         </div>
       )}
-
     </div>
   );
-}
+};
 
 export default Favorites;

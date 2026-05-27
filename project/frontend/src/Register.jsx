@@ -1,120 +1,190 @@
-import React, { useState } from "react";
-import { registerUser } from "./services/api";
+import React, {
+  useState
+} from "react";
+
+import {
+  toast
+} from "react-toastify";
+
+import {
+  registerUser
+} from "./services/api";
+
 import "./Movies.css";
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [name, setName] =
+    useState("");
 
-  // HANDLE REGISTER
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
+
+  const [success, setSuccess] =
+    useState("");
+
   const handleRegister = async (e) => {
+
     e.preventDefault();
 
+    if (name.trim().length < 3) {
+      setError(
+        "Name must be minimum 3 characters"
+      );
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setError(
+        "Enter valid email"
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      setError(
+        "Password must be minimum 6 characters"
+      );
+      return;
+    }
+
     try {
+
       setLoading(true);
+
       setError("");
+
       setSuccess("");
 
-      const response = await registerUser({
-        name,
-        email,
-        password,
-      });
+      const response =
+        await registerUser({
+          name,
+          email,
+          password
+        });
 
-      console.log("REGISTER RESPONSE:", response);
-
-      // ❗ FIXED ERROR HANDLING
       if (!response.success) {
-        setError(response.message || "Registration Failed");
+
+        setError(
+          response.message
+        );
+
         return;
       }
 
-      // SUCCESS
-      setSuccess(response.message || "Registered successfully!");
+      setSuccess(
+        response.message
+      );
 
-      // CLEAR FORM
+      toast.success(
+        "Registration Successful"
+      );
+
       setName("");
       setEmail("");
       setPassword("");
 
     } catch (err) {
+
       console.log(err);
-      setError(err.message || "Registration Failed");
+
+      setError(
+        err.message ||
+        "Registration Failed"
+      );
+
+      toast.error(
+        err.message
+      );
 
     } finally {
+
       setLoading(false);
     }
   };
 
   return (
+
     <div className="register-container">
 
-      <form className="register-form" onSubmit={handleRegister}>
+      <form
+        className="register-form"
+        onSubmit={handleRegister}
+      >
 
-        <h2 className="register-heading">Register</h2>
+        <h2 className="register-heading">
+          Register
+        </h2>
 
-        {/* SUCCESS MESSAGE */}
         {success && (
           <p className="register-success">
             {success}
           </p>
         )}
 
-        {/* ERROR MESSAGE */}
         {error && (
           <p className="register-error">
             {error}
           </p>
         )}
 
-        {/* LOADING */}
-        {loading && (
-          <p className="register-loading">
-            Loading...
-          </p>
-        )}
+        <label>Name</label>
 
-        {/* NAME */}
         <input
           type="text"
           placeholder="Enter Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) =>
+            setName(e.target.value)
+          }
           className="register-input"
           required
         />
 
-        {/* EMAIL */}
+        <label>Email</label>
+
         <input
           type="email"
           placeholder="Enter Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
           className="register-input"
           required
         />
 
-        {/* PASSWORD */}
+        <label>Password</label>
+
         <input
           type="password"
           placeholder="Enter Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
           className="register-input"
           required
         />
 
-        {/* BUTTON */}
         <button
           className="register-button"
           disabled={loading}
         >
-          {loading ? "Registering..." : "Register"}
+
+          {loading
+            ? "Creating Account..."
+            : "Register"}
+
         </button>
 
       </form>

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./Movies.css";
+
+import config from "./config";
 
 function Movies() {
 
@@ -11,6 +13,20 @@ function Movies() {
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
+
+
+  // LOAD RECENT MOVIES ON PAGE LOAD
+  useEffect(() => {
+
+    const recentMovies =
+      localStorage.getItem("recentMovies");
+
+    if (recentMovies) {
+
+      setMovies(JSON.parse(recentMovies));
+    }
+
+  }, []);
 
 
   // FETCH MOVIES
@@ -30,14 +46,28 @@ function Movies() {
       setError("");
 
       const response = await fetch(
-        `http://127.0.0.1:8000/movies/search?title=${search}`
+        `${config.BASE_URL}/movies/search?title=${search}`
       );
 
       const data = await response.json();
 
       console.log(data);
 
-      setMovies(data);
+      // IF ARRAY
+      if (Array.isArray(data)) {
+
+        setMovies(data);
+
+        // SAVE TO LOCAL STORAGE
+        localStorage.setItem(
+          "recentMovies",
+          JSON.stringify(data)
+        );
+
+      } else {
+
+        setMovies([]);
+      }
 
     } catch (err) {
 
@@ -72,7 +102,7 @@ function Movies() {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/favorites",
+        `${config.BASE_URL}/favorites`,
         {
           method: "POST",
 
@@ -166,52 +196,59 @@ function Movies() {
 
       {!loading &&
         movies.length === 0 && (
-          <h3>No movies found</h3>
+          <h3>No recent movies</h3>
       )}
-
 
       <div className="grid">
 
-        {movies.map((movie, index) => (
+  {movies
+    .filter(
+      (movie) =>
+        movie.Poster &&
+        movie.Poster !== "N/A"
+    )
+    .map((movie, index) => (
 
-          <div
-            key={movie.imdbID || index}
-            className="card"
-          >
+      <div
+        key={movie.imdbID || index}
+        className="card"
+      >
 
-            <img
-              src={
-                movie.Poster !== "N/A"
-                  ? movie.Poster
-                  : "https://placehold.co/300x450"
-              }
-              alt={movie.Title}
-              className="image"
-            />
+        <img
+          src={movie.Poster}
+          alt={movie.Title}
+          className="image"
+          onError={(e) => {
+            e.target.closest(".card").style.display =
+              "none";
+          }}
+        />
 
-            <h3 className="movieTitle">
-              {movie.Title}
-            </h3>
+        <h3 className="movieTitle">
+          {movie.Title}
+        </h3>
 
-            <p className="movieText">
-              Year: {movie.Year}
-            </p>
+        <p className="movieText">
+          Year: {movie.Year}
+        </p>
 
-            <button
-              className="favoriteButton"
-              onClick={() =>
-                addToFavorites(movie)
-              }
-            >
-              ❤️ Add to Favorites
-            </button>
-
-          </div>
-        ))}
+        <button
+          className="favoriteButton"
+          onClick={() =>
+            addToFavorites(movie)
+          }
+        >
+          ❤️ Add to Favorites
+        </button>
 
       </div>
+    ))}
 
-    </div>
+</div>
+
+</div>
+
+    
   );
 }
 

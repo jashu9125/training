@@ -1,0 +1,68 @@
+My project is a Full Stack Movie Search and Favorites Application developed using React.js for the frontend and FastAPI + SQLite for the backend. The application allows users to register, login securely using JWT authentication, search movies using the OMDb API, and save favorite movies permanently in the database.
+
+# Brief Explanation about the Task
+
+1. The frontend was built using **React.js** with reusable components and React Hooks like `useState`, `useEffect`, and `useCallback` for state management and API handling.
+
+2. A secure **Login and Registration system** was implemented using FastAPI authentication routes with password hashing and JWT token generation.
+
+3. User authentication is protected using a **ProtectedRoute** component in React, which restricts unauthorized users from accessing Movies and Favorites pages.
+
+4. The backend uses **FastAPI** with **SQLite Database** and **SQLAlchemy ORM** for storing users and favorite movies.
+
+5. Movie data is fetched dynamically from the **OMDb API** using custom FastAPI service functions.
+
+6. The Movies page supports:
+
+   * Searching movies by movie title
+   * Searching hero/actor-related movies
+   * Displaying recent searched movies using Local Storage
+   * Loading movies instantly after login
+
+7. Favorite movies functionality was implemented using:
+
+   * Add to Favorites
+   * Remove from Favorites
+   * Persistent storage in database
+   * Displaying favorites in a separate Favorites page
+
+8. Invalid movie posters and broken images are automatically filtered using image validation and `onError` handling to maintain proper UI alignment.
+
+9. The UI was enhanced using custom CSS with:
+
+   * Responsive grid layout
+   * Attractive movie cards
+   * Gradient animated buttons
+   * Hover effects
+   * Single-line movie titles using ellipsis
+   * Styled navbar and authentication forms
+
+10. The application follows clean coding practices with:
+
+* Separate folders for routes, services, models, schemas, and utilities
+* Reusable API functions
+* Environment variables for API keys
+* Modular frontend component structure
+
+11. CORS middleware was configured in FastAPI to enable smooth communication between React frontend and FastAPI backend.
+
+12. Toast notifications using `react-toastify` were added for better user experience during login, registration, and favorite actions.
+
+13. Local Storage is used for:
+
+* Storing JWT tokens
+* Maintaining login session
+* Saving recently searched movies
+
+14. The application is fully responsive and works across desktop and mobile devices.
+
+15. Overall, the project demonstrates:
+
+* API Integration
+* Authentication & Authorization
+* Database Operations
+* Full Stack Development
+* Responsive UI Design
+* State Management
+* Error Handling
+* Component Reusability
