@@ -1,0 +1,12 @@
+#Task-9
+our backend movie module is a FastAPI router that connects your frontend with the OMDb API and optionally stores search history in SQLite.
+
+It has three main responsibilities:
+
+First, it provides a **home movies endpoint (`/movies`)** that returns a default list of movies (like “batman”) using the OMDb search API.
+
+Second, it exposes a **search endpoint (`/movies/search`)** where the user can search movies by title. It calls `search_movies(title)` from your OMDb service and returns the results. It also optionally saves the search keyword into the `SearchHistory` table using SQLAlchemy.
+
+Third, it adds a **movie details endpoint (`/movies/id/{imdb_id}`)** which fetches full movie information using the IMDb ID. This uses `get_movie(imdb_id)` to call OMDb’s detail API and returns complete movie data.
+
+Overall, this module acts as a bridge between your React frontend and OMDb API while also persisting user search activity in the database.
