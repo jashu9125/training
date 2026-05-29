@@ -1,11 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException
+)
+
+from fastapi.security import (
+    OAuth2PasswordRequestForm
+)
+
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
+
 from app.models.user import User
 
-from app.schemas.user_schema import UserRegister
+from app.schemas.user_schema import (
+    UserRegister
+)
 
 from app.services.auth_service import (
     hash_password,
@@ -35,19 +46,24 @@ def register(
     ).first()
 
     if existing_user:
+
         raise HTTPException(
             status_code=400,
-            detail=error_response("Email already exists")
+            detail="Email already exists"
         )
 
     new_user = User(
         name=user.name,
         email=user.email,
-        password=hash_password(user.password)
+        password=hash_password(
+            user.password
+        )
     )
 
     db.add(new_user)
+
     db.commit()
+
     db.refresh(new_user)
 
     return success_response(
@@ -69,29 +85,28 @@ def login(
     db: Session = Depends(get_db)
 ):
 
+    # 🔍 DEBUG: check all users in DB
+    print("ALL USERS IN DB:", db.query(User).all())
+
     db_user = db.query(User).filter(
         User.email == form_data.username
     ).first()
 
+    # CHECK USER
     if not db_user:
         raise HTTPException(
             status_code=401,
-            # detail="Invalid email"
-            detail={
-    "message": "Invalid email"
-}
+            detail="Invalid email"
         )
 
+    # CHECK PASSWORD
     if not verify_password(
         form_data.password,
         db_user.password
     ):
         raise HTTPException(
             status_code=401,
-            # detail="Invalid password"
-            detail={
-    "message": "Invalid password"
-}
+            detail="Invalid password"
         )
 
     access_token = create_access_token(
@@ -99,6 +114,12 @@ def login(
     )
 
     return {
+        "success": True,
         "access_token": access_token,
-        "token_type": "bearer"
+        "token_type": "bearer",
+        "user": {
+            "id": db_user.id,
+            "name": db_user.name,
+            "email": db_user.email
+        }
     }

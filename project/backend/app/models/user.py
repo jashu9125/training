@@ -3,6 +3,7 @@ from datetime import datetime
 
 from app.database.database import Base
 
+from sqlalchemy.orm import relationship
 
 class User(Base):
 
@@ -35,3 +36,20 @@ class User(Base):
         DateTime,
         default=datetime.utcnow
     )
+
+    
+    
+    favorites = relationship(
+    "Favorite",
+    backref="user"
+)
+
+reviews = relationship(
+    "Review",
+    backref="user"
+)
+
+search_history = relationship(
+    "SearchHistory",
+    backref="user"
+)

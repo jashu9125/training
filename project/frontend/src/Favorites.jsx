@@ -5,32 +5,48 @@ import "./Movies.css";
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
 
-  // FETCH FAVORITES
+  // ✅ FETCH FAVORITES
   const fetchFavorites = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
 
+      if (!token) {
+        setFavorites([]);
+        return;
+      }
+
       const response = await fetch(
         `${config.BASE_URL}/favorites`,
         {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
+      // ❗ HANDLE 401
+      if (response.status === 401) {
+        console.log("Unauthorized - login again");
+        setFavorites([]);
+        return;
+      }
+
       const data = await response.json();
 
-      console.log("Favorites Response:", data);
+      console.log("Favorites API Response:", data);
 
-      // FIX HERE
-      setFavorites(data.favorites || data.data || []);
+      // ✅ YOUR BACKEND RETURNS: { message, data }
+      const list = data?.data;
+
+      setFavorites(Array.isArray(list) ? list : []);
     } catch (error) {
-      console.log("Error fetching favorites:", error);
+      console.log("Error:", error);
+      setFavorites([]);
     }
   }, []);
 
-  // REMOVE FAVORITE
+  // ✅ REMOVE FAVORITE
   const removeFavorite = async (id) => {
     try {
       const token = localStorage.getItem("token");
@@ -47,7 +63,7 @@ const Favorites = () => {
 
       fetchFavorites();
     } catch (error) {
-      console.log("Delete error:", error);
+      console.log(error);
     }
   };
 
@@ -57,9 +73,7 @@ const Favorites = () => {
 
   return (
     <div className="favorites-container">
-      <h1 className="favorites-title">
-        Favorite Movies
-      </h1>
+      <h1 className="favorites-title">🎬 Favorite Movies</h1>
 
       {favorites.length === 0 ? (
         <h3 className="no-favorites">
@@ -68,10 +82,7 @@ const Favorites = () => {
       ) : (
         <div className="favorites-grid">
           {favorites.map((movie) => (
-            <div
-              key={movie.id}
-              className="favorite-card"
-            >
+            <div key={movie.id} className="favorite-card">
               <img
                 src={movie.poster}
                 alt={movie.title}
@@ -84,7 +95,7 @@ const Favorites = () => {
 
               <button
                 className="remove-btn"
-                onClick={() => removeFavorite(movie.id)}
+                onClick={() => removeFavorite(movie.movie_id)}
               >
                 Remove
               </button>
