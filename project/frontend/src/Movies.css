@@ -341,3 +341,66 @@ body {
 .remove-btn:hover {
   transform: scale(1.05);
 }
+
+.details-container {
+  min-height: 100vh;
+  background: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.details-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  gap: 30px;
+  max-width: 1000px;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.details-image {
+  width: 320px;
+  border-radius: 12px;
+}
+
+.details-content {
+  flex: 1;
+}
+
+.details-content h1 {
+  margin-bottom: 20px;
+}
+
+.details-content p {
+  margin-bottom: 15px;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .details-card {
+    flex-direction: column;
+  }
+
+  .details-image {
+    width: 100%;
+  }
+}
+
+
+.moviePlot {
+  font-size: 13px;
+  color: #555;
+  margin-top: 1px;
+  line-height: 1.2;
+  height: 60px;
+  overflow: hidden;
+}
+
+.movieText {
+  margin: 3px 0;
+  font-size: 14px;
+}

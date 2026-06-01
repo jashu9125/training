@@ -20,6 +20,7 @@ import LoginPage from "./loginpage/LoginPage";
 import Register from "./Register";
 import Movies from "./Movies";
 import Favorites from "./Favorites";
+import MovieDetails from "./MovieDetails";
 import ProtectedRoute from "./ProtectedRoute";
 
 import "./App.css";
@@ -55,10 +56,8 @@ function App() {
         position="top-right"
       />
 
-      {/* NAVBAR */}
       <nav className="navbar">
 
-        {/* ALWAYS SHOW */}
         <Link
           to="/"
           className="nav-link"
@@ -73,7 +72,6 @@ function App() {
           Register
         </Link>
 
-        {/* SHOW ONLY AFTER LOGIN */}
         {isAuth && (
           <>
 
@@ -103,7 +101,6 @@ function App() {
 
       </nav>
 
-      {/* ROUTES */}
       <Routes>
 
         <Route
@@ -130,6 +127,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Favorites />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/movie/:imdbID"
+          element={
+            <ProtectedRoute>
+              <MovieDetails />
             </ProtectedRoute>
           }
         />

@@ -1,0 +1,64 @@
+# Task-10
+# Movie Details Page – Implementation Summary
+
+Today, I implemented the Movie Details feature in the Movie Search Application.
+
+# What I Added
+
+* Created a Movie Details Page (`MovieDetails.jsx`).
+* Added a new route in `App.js`:
+
+  ```jsx
+  /movie/:imdbID
+  ```
+* Enabled navigation from a movie card to the details page using:
+
+  ```jsx
+  navigate(`/movie/${movie.imdbID}`)
+  ```
+* Added a backend API endpoint:
+
+  ```python
+  GET /movies/id/{imdb_id}
+  ```
+
+  to fetch complete movie information from OMDb using IMDb ID.
+
+# How It Works
+
+1. User searches for movies.
+2. Movies are displayed as cards.
+3. When a movie card is clicked:
+
+   * The application navigates to the Movie Details page.
+
+4. The Movie Details page extracts the IMDb ID using:
+
+   ```jsx
+   useParams()
+   ```
+5. A request is sent to:
+
+   ```jsx
+   /movies/id/{imdbID}
+   ```
+6. The backend fetches detailed movie information from the OMDb API.
+7. The frontend displays:
+
+   * Movie Poster
+   * Movie Title
+   * Release Year
+   * Genre
+   * Plot
+   * IMDb Rating
+
+# Additional Improvements
+
+* Added loading and error handling while fetching movie details.
+* Protected the Movie Details route using `ProtectedRoute`.
+* Enhanced movie cards by displaying Genre, IMDb Rating, and Plot preview.
+* Filtered invalid movie posters and handled broken image URLs gracefully.
+
+# Outcome
+
+Users can now click any movie card and view complete movie information on a dedicated Movie Details page, providing a better browsing experience and richer movie details.

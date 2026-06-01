@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Movies.css";
 import config from "./config";
 
@@ -12,6 +13,11 @@ function Movies() {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   const [movieReviews, setMovieReviews] = useState({});
+
+
+
+const navigate = useNavigate();
+
 
   // LOAD RECENT MOVIES
   useEffect(() => {
@@ -42,8 +48,8 @@ function Movies() {
     );
   };
 
+const fetchMovies = async () => {
 
-  const fetchMovies = async () => {
   if (!search.trim()) {
     setError("Please enter movie name");
     return;
@@ -57,9 +63,11 @@ function Movies() {
   }
 
   try {
+
     setLoading(true);
     setError("");
 
+    // SEARCH MOVIES
     const response = await fetch(
       `${config.BASE_URL}/movies/search?title=${search}`,
       {
@@ -77,11 +85,51 @@ function Movies() {
 
     const data = await response.json();
 
-    const moviesData = Array.isArray(data) ? data : [];
+    const moviesData = Array.isArray(data)
+      ? data
+      : [];
 
-    const filteredMovies = moviesData.filter((m) =>
-      m.Poster && m.Poster.startsWith("http")
-    );
+    // FETCH FULL DETAILS FOR EACH MOVIE
+    const detailedMovies = await Promise.all(
+
+  moviesData.map(async (movie) => {
+
+    try {
+
+      console.log(
+        `${config.BASE_URL}/movies/id/${movie.imdbID}`
+      );
+
+      const res = await fetch(
+        `${config.BASE_URL}/movies/id/${movie.imdbID}`
+      );
+
+      const data = await res.json();
+
+      console.log("Movie Details:", data);
+
+      return data;
+
+    } catch (error) {
+
+      console.log(error);
+
+      return movie;
+    }
+  })
+
+);
+
+
+console.log("Detailed Movies:", detailedMovies);
+    // REMOVE INVALID POSTERS
+    const filteredMovies =
+      detailedMovies.filter(
+        (movie) =>
+          movie.Poster &&
+          movie.Poster !== "N/A" &&
+          movie.Poster.startsWith("http")
+      );
 
     setMovies(filteredMovies);
 
@@ -89,9 +137,15 @@ function Movies() {
       "recentMovies",
       JSON.stringify(filteredMovies)
     );
+
   } catch (err) {
+
+    console.log(err);
+
     setError("Server Error");
+
   } finally {
+
     setLoading(false);
   }
 };
@@ -243,6 +297,7 @@ function Movies() {
             <div
               key={movie.imdbID || index}
               className="card"
+              onClick={() => navigate(`/movie/${movie.imdbID}`)}
             >
 
               {/* MOVIE IMAGE */}
@@ -267,6 +322,19 @@ function Movies() {
               <p className="movieText">
                 Year: {movie.Year}
               </p>
+
+              <p className="movieText">
+                  Genre: {movie.Genre}
+              </p>
+
+              <p className="movieText">
+                  IMDb: ⭐ {movie.imdbRating}
+              </p>
+
+              <p className="moviePlot">
+                  {movie.Plot?.substring(0, 100)}...
+              </p>
+
 
               {/* FAVORITES BUTTON */}
               <button
@@ -317,66 +385,67 @@ function Movies() {
 
       </div>
 
-      {/* REVIEW MODAL */}
-      {selectedMovie && (
-        <div className="modalOverlay">
+   {/* REVIEW MODAL */}
+{selectedMovie && (
+  <div className="modalOverlay">
 
-          <div className="modalBox">
+    <div className="modalBox">
 
-            {/* CLOSE BUTTON */}
-            <button
-              onClick={() =>
-                setSelectedMovie(null)
-              }
-            >
-              ✖
-            </button>
+      <button
+        className="closeBtn"
+        onClick={() => setSelectedMovie(null)}
+      >
+        ✕
+      </button>
 
-            {/* MOVIE IMAGE */}
-            <img
-              src={selectedMovie.Poster}
-              alt={selectedMovie.Title}
-              className="modalImage"
-            />
+      <img
+        src={selectedMovie.Poster}
+        alt={selectedMovie.Title}
+        className="modalImage"
+      />
 
-            {/* REVIEW TEXTAREA */}
-            <textarea
-              value={review}
-              onChange={(e) =>
-                setReview(e.target.value)
-              }
-              placeholder="Write review..."
-            />
+      <h2 className="modalTitle">
+        {selectedMovie.Title}
+      </h2>
 
-            {/* STAR RATING */}
-            <div>
-              {[1, 2, 3, 4, 5].map((s) => (
-                <span
-                  key={s}
-                  onClick={() => setRating(s)}
-                  className={
-                    s <= rating
-                      ? "activeStar"
-                      : "star"
-                  }
-                >
-                  ★
-                </span>
-              ))}
-            </div>
+      <textarea
+        className="reviewTextarea"
+        value={review}
+        onChange={(e) => setReview(e.target.value)}
+        placeholder="Share your thoughts about this movie..."
+      />
 
-            {/* SUBMIT REVIEW */}
-            <button onClick={addReview}>
-              Submit Review
-            </button>
+      <div className="ratingContainer">
+        {[1, 2, 3, 4, 5].map((s) => (
+          <span
+            key={s}
+            onClick={() => setRating(s)}
+            className={
+              s <= rating
+                ? "activeStar"
+                : "star"
+            }
+          >
+            ★
+          </span>
+        ))}
+      </div>
 
-          </div>
+      <button
+        className="submitReviewBtn"
+        onClick={addReview}
+      >
+        Submit Review
+      </button>
 
-        </div>
-      )}
+    </div>
+
+  </div>
+)} 
 
     </div>
   );
 }
 
 export default Movies;
+
