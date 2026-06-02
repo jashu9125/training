@@ -1,0 +1,19 @@
+# Task-11
+
+# Favorites / Watchlist Feature – Implementation Summary
+
+Implemented a Favorites (Watchlist) feature to allow users to save and manage their preferred movies.
+
+* Added an "Add to Favorites" button on each movie card.
+* Integrated Create (Add) and Read (View) operations using API calls.
+* Created a separate Favorites page using React Router for displaying saved movies.
+* Implemented Delete (Remove from Favorites) functionality to remove movies from the watchlist.
+* Added conditional rendering to display an empty state message when no favorite movies are available.
+* Persisted favorite movie data through backend APIs and synchronized UI state accordingly.
+* Added favorite count in the navigation bar that updates dynamically when movies are added or removed.
+* Prevented duplicate favorites by checking existing favorite movie IDs before adding.
+* Implemented toast notifications to provide user feedback for successful add, remove, and error operations.
+* Used React state management (useState, useEffect) to keep the UI updated in real time.
+* Designed the Favorites page with a responsive card layout for better user experience.
+
+Concepts Used: CRUD Operations, API Integration, State Management, Conditional Rendering, Component Reusability, Routing & Navigation, and User Feedback with Toast Notifications.

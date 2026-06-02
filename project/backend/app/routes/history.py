@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 from app.database.database import get_db
 from app.models.search_history import SearchHistory
 from app.models.user import User
-from app.routes.favorites import get_current_user
+# from app.routes.favorites import get_current_user
+from app.services.auth_service import get_current_user
 
 router = APIRouter()
 

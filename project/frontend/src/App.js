@@ -16,6 +16,8 @@ import {
 
 import "react-toastify/dist/ReactToastify.css";
 
+import config from "./config";
+
 import LoginPage from "./loginpage/LoginPage";
 import Register from "./Register";
 import Movies from "./Movies";
@@ -27,17 +29,100 @@ import "./App.css";
 
 function App() {
 
-  const [isAuth, setIsAuth] =
-    useState(false);
+  const [isAuth, setIsAuth] = useState(
+  !!localStorage.getItem("token")
+);
 
-  useEffect(() => {
+useEffect(() => {
 
-    const token =
-      localStorage.getItem("token");
+  const handleStorageChange = () => {
+    setIsAuth(
+      !!localStorage.getItem("token")
+    );
+  };
 
-    setIsAuth(!!token);
+  window.addEventListener(
+    "storage",
+    handleStorageChange
+  );
 
-  }, []);
+  return () => {
+    window.removeEventListener(
+      "storage",
+      handleStorageChange
+    );
+  };
+
+}, []);
+
+
+const [favCount, setFavCount] =
+  useState(0);
+
+const loadFavoritesCount =
+  async () => {
+
+    try {
+
+      const token =
+        localStorage.getItem("token");
+
+      if (!token) {
+
+        setFavCount(0);
+        return;
+      }
+
+      const res = await fetch(
+        `${config.BASE_URL}/favorites`,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data =
+        await res.json();
+
+      setFavCount(
+        Array.isArray(data)
+          ? data.length
+          : 0
+      );
+
+    } catch (err) {
+
+      console.log(err);
+    }
+  };
+
+useEffect(() => {
+
+  loadFavoritesCount();
+
+  const handleFavoritesUpdate =
+    () => {
+      loadFavoritesCount();
+    };
+
+  window.addEventListener(
+    "favoritesUpdated",
+    handleFavoritesUpdate
+  );
+
+  return () => {
+
+    window.removeEventListener(
+      "favoritesUpdated",
+      handleFavoritesUpdate
+    );
+
+  };
+
+}, [isAuth]);
+
 
   const handleLogout = () => {
 
@@ -86,7 +171,7 @@ function App() {
               to="/favorites"
               className="nav-link"
             >
-              Favorites
+              Favorites ({favCount})
             </Link>
 
             <button

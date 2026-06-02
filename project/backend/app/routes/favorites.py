@@ -7,8 +7,6 @@ from app.models.user import User
 from app.schemas.favorite_schema import FavoriteCreate
 from app.services.auth_service import get_current_user
 
-from app.services.auth_service import get_current_user
-
 router = APIRouter()
 
 

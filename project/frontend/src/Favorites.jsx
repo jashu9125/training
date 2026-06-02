@@ -83,43 +83,52 @@ const Favorites = () => {
   // =========================
   // REMOVE FAVORITE
   // =========================
-  const removeFavorite =
-    async (movieId) => {
 
-      try {
+        const removeFavorite = async (movieId) => {
+
+        try {
 
         const token =
           localStorage.getItem("token");
 
         const response =
           await fetch(
-            `${config.BASE_URL}/favorites/${movieId}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
-              },
-            }
-          );
-
-        if (!response.ok) {
-          alert(
-            "Failed to remove favorite"
-          );
-          return;
+          `${config.BASE_URL}/favorites/${movieId}`,
+        {
+          method: "DELETE",
+          headers: {
+          Authorization: `Bearer ${token}`,
+          },
         }
+      );
 
-        // REFRESH LIST
-        fetchFavorites();
+    if (!response.ok) {
+      alert("Failed to remove favorite");
+      return;
+    }
 
-      } catch (error) {
+    // REMOVE FROM UI IMMEDIATELY
+    setFavorites((prev) =>
+      prev.filter(
+        (movie) => movie.movie_id !== movieId
+      )
+    );
 
-        console.log(error);
+    window.dispatchEvent(
+  new Event("favoritesUpdated")
+);
 
-        alert("Server Error");
-      }
-    };
+    alert("Removed from favorites");
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Server Error");
+  }
+};
+
+
 
   // =========================
   // LOAD FAVORITES

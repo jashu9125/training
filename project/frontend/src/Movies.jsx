@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./Movies.css";
 import config from "./config";
 
+import { toast } from "react-toastify";
+
 function Movies() {
   const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState("");
@@ -13,6 +15,8 @@ function Movies() {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   const [movieReviews, setMovieReviews] = useState({});
+  const [favoriteIds, setFavoriteIds] =
+  useState([]);
 
 
 
@@ -169,6 +173,9 @@ console.log("Detailed Movies:", detailedMovies);
       });
 
       alert("Added to favorites");
+      window.dispatchEvent(
+      new Event("favoritesUpdated")
+    );
     } catch (error) {
       alert("Server Error");
     }
@@ -337,14 +344,18 @@ console.log("Detailed Movies:", detailedMovies);
 
 
               {/* FAVORITES BUTTON */}
+
               <button
                 className="favoriteButton"
-                onClick={() =>
-                  addToFavorites(movie)
-                }
+                 onClick={() =>
+                 addToFavorites(movie)
+              }
               >
-                ❤️ Add to Favorites
+               {favoriteIds.includes(movie.imdbID)
+               ? "❤️ Saved"
+              : "🤍 Add to Favorites"}
               </button>
+
 
               {/* REVIEW BUTTON */}
               <button
@@ -448,4 +459,3 @@ console.log("Detailed Movies:", detailedMovies);
 }
 
 export default Movies;
-

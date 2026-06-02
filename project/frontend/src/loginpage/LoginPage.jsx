@@ -53,16 +53,12 @@ function LoginPage() {
 
       setError("");
 
-      await loginUser(
-        email,
-        password
-      );
+      await loginUser(email, password);
 
-      toast.success(
-        "Login Successful"
-      );
+      toast.success("Login Successful");
 
-      navigate("/movies");
+      window.location.href = "/movies";
+
 
     } catch (err) {
 

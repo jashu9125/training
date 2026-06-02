@@ -41,7 +41,7 @@ app.include_router(movies_router)
 app.include_router(favorites_router)
 app.include_router(reviews_router)
 
-app.include_router(reviews.router)
+# app.include_router(reviews.router)
 app.include_router(history.router)
 
 @app.get("/")
