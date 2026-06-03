@@ -60,6 +60,7 @@ const fetchMovies = async () => {
   }
 
   const token = localStorage.getItem("token");
+   console.log("TOKEN =", token);
 
   if (!token) {
     setError("Login required");
@@ -104,9 +105,18 @@ const fetchMovies = async () => {
         `${config.BASE_URL}/movies/id/${movie.imdbID}`
       );
 
+      // const res = await fetch(
+      //   `${config.BASE_URL}/movies/id/${movie.imdbID}`
+      // );
+
       const res = await fetch(
-        `${config.BASE_URL}/movies/id/${movie.imdbID}`
-      );
+        `${config.BASE_URL}/movies/id/${movie.imdbID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+          },
+          }
+          );
 
       const data = await res.json();
 

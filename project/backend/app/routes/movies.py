@@ -6,6 +6,9 @@ from app.models.search_history import SearchHistory
 
 from app.services.omdb_service import search_movies, get_movie
 
+from app.services.auth_service import get_current_user
+from app.models.user import User
+
 router = APIRouter()
 
 
@@ -21,7 +24,17 @@ def home_movies():
 # SEARCH MOVIES
 # =========================
 @router.get("/movies/search")
-def search(title: str, db: Session = Depends(get_db)):
+def search(
+    title: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+
+    if not title.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid request"
+        )
 
     data = search_movies(title)
 
@@ -30,16 +43,13 @@ def search(title: str, db: Session = Depends(get_db)):
 
     movies = data.get("Search", [])
 
-    # OPTIONAL: SAVE SEARCH HISTORY
-    try:
-        history = SearchHistory(
-            keyword=title
-        )
-        db.add(history)
-        db.commit()
+    history = SearchHistory(
+        keyword=title,
+        user_id=user.id
+    )
 
-    except Exception as e:
-        print("History save error:", e)
+    db.add(history)
+    db.commit()
 
     return movies
 

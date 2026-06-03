@@ -1,0 +1,38 @@
+#Task-11
+# Short Implementation Explanation :-
+
+Implemented a Search History Tracking System that automatically records every movie search performed by an authenticated user. Each search entry stores the user ID, search keyword, and timestamp, allowing user activity to be tracked and analyzed.
+
+Developed a Search History API (`GET /history`) that retrieves the latest 10 searches for the logged-in user in descending order based on search time. The API also handles empty search history scenarios by returning an empty data array with a successful response.
+
+Created a Dashboard Statistics API (`GET /dashboard`) that provides a quick overview of user activity, including:
+
+* Total favorite movies saved
+* Total movie searches performed
+* Latest 3 search keywords
+
+Established database relationships using SQLAlchemy ORM:
+
+* One User can have multiple Favorites.
+* One User can have multiple Search History records.
+* One User can have multiple Reviews.
+* Foreign key constraints ensure proper data integrity and ownership.
+
+Implemented automatic search history storage whenever a movie search is performed, ensuring all search activities are persisted without requiring additional user actions.
+
+Added global validation handling for malformed requests and invalid input data, returning consistent error responses across all APIs.
+
+Implemented authentication and authorization checks using JWT tokens to ensure that search history and dashboard data are accessible only to authenticated users.
+
+Added structured error handling for:
+
+* Invalid requests (400 Bad Request)
+* Unauthorized access (401 Unauthorized)
+* User not found (404 Not Found)
+* Empty search history (200 OK with empty array)
+
+Used reusable response formats to maintain consistency across backend APIs and improve frontend integration.
+
+Implemented proper database session management and dependency injection using FastAPI's `Depends()` and SQLAlchemy sessions for secure and efficient database operations.
+
+Ensured all APIs return clean, structured JSON responses and meet the acceptance criteria for search tracking, dashboard analytics, validation handling, authentication, and database relationships.

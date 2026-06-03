@@ -19,6 +19,18 @@ from app.database.database import Base
 
 from app.routes import reviews, history
 
+from app.routes.dashboard import (
+    router as dashboard_router
+)
+
+from fastapi.exceptions import (
+    RequestValidationError
+)
+
+from app.utils.exceptions import (
+    validation_exception_handler
+)
+
 # CREATE TABLES
 Base.metadata.create_all(bind=engine)
 
@@ -35,6 +47,12 @@ app.add_middleware(
 )
 
 
+#Register
+app.add_exception_handler(
+    RequestValidationError,
+    validation_exception_handler
+)
+
 # ROUTES
 app.include_router(auth_router)
 app.include_router(movies_router)
@@ -43,6 +61,8 @@ app.include_router(reviews_router)
 
 # app.include_router(reviews.router)
 app.include_router(history.router)
+
+app.include_router(dashboard_router)
 
 @app.get("/")
 def home():

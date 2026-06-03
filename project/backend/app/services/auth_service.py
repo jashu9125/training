@@ -56,12 +56,17 @@ def get_current_user(
 
     credentials_exception = HTTPException(
         status_code=401,
-        detail="Not authenticated",
+        detail="Unauthorized",
         headers={"WWW-Authenticate": "Bearer"},
     )
 
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+
         email = payload.get("sub")
 
         if email is None:
@@ -70,9 +75,14 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    user = db.query(User).filter(User.email == email).first()
+    user = db.query(User).filter(
+        User.email == email
+    ).first()
 
     if not user:
-        raise credentials_exception
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
 
     return user
