@@ -9,8 +9,10 @@ from app.schemas.review_schema import ReviewCreate
 
 from app.schemas.review_schema import ReviewCreate, ReviewUpdate
 
-router = APIRouter()
-
+router = APIRouter(
+    prefix="/reviews",
+    tags=["Reviews"]
+)
 
 # CREATE REVIEW
 @router.post("/reviews")

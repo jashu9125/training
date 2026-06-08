@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from app.database.database import Base
 
+
+
 class Favorite(Base):
     __tablename__ = "favorites"
 

@@ -7,6 +7,8 @@ import React, {
 import config from "./config";
 import "./Movies.css";
 
+import "./Favorites.css";
+
 const Favorites = () => {
 
   const [favorites, setFavorites] =

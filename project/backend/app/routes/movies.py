@@ -9,8 +9,9 @@ from app.services.omdb_service import search_movies, get_movie
 from app.services.auth_service import get_current_user
 from app.models.user import User
 
-router = APIRouter()
-
+router = APIRouter(
+    tags=["Movies"]
+)
 
 # =========================
 # HOME MOVIES (NO AUTH)

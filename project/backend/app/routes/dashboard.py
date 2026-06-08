@@ -12,8 +12,10 @@ from app.services.auth_service import (
     get_current_user
 )
 
-router = APIRouter()
-
+router = APIRouter(
+    prefix="/dashboard",
+    tags=["Dashboard"]
+)
 
 @router.get("/dashboard")
 def dashboard(

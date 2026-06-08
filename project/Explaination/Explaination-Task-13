@@ -1,0 +1,135 @@
+# Task-13
+Here is a clean “Brief Explanation of Recommendation Logic” you can directly submit for your project:
+
+---
+
+#  Recommendation Logic – Explanation
+
+The Movie Recommendation System is designed to generate personalized movie suggestions based on user activity inside the application. It analyzes user behavior from multiple sources and derives their preferences to recommend relevant movies.
+
+---
+
+#  1. Data Sources Used
+
+The system collects and analyzes three main user activity signals:
+
+### 1. User Favorites
+
+Movies that the user explicitly liked or saved.
+
+* Strong indicator of preference
+* Used to identify preferred genres and actors
+
+### 2. Search History
+
+Movies or keywords searched by the user (e.g., Batman, Avengers).
+
+* Helps detect user interest patterns
+* Used to infer genres like Action, Superhero, Thriller
+
+### 3. Recently Viewed Movies
+
+Movies the user clicked or watched details of.
+
+* Shows passive interest
+* Helps refine recommendations based on engagement
+
+---
+
+# ⚙️ 2. Recommendation Process
+
+### Step 1: Collect User Data
+
+The system fetches:
+
+* Favorites table
+* Search history table
+* View history table
+
+---
+
+### Step 2: Extract Preferences
+
+From collected data, the system extracts:
+
+* Most frequently searched genres
+* Most liked genres from favorites
+* Recently viewed movie categories
+
+This helps build a **user preference profile**.
+
+---
+
+### Step 3: Genre Scoring
+
+Each genre is assigned a score based on user activity:
+
+* Favorite movie → +5 score
+* Viewed movie → +2 score
+* Search keyword → +3 score
+
+Example:
+
+| Genre  | Score |
+| ------ | ----- |
+| Action | 10    |
+| Drama  | 4     |
+| Sci-Fi | 7     |
+
+The highest scored genres are considered user preferences.
+
+---
+
+### Step 4: Movie Filtering
+
+The system fetches movies from the database/API and:
+
+* Filters movies matching top genres
+* Removes already viewed or favorited movies
+* Avoids duplicate recommendations
+
+---
+
+### Step 5: Ranking & Output
+
+Movies are ranked based on:
+
+* Genre match strength
+* Frequency of user interest
+* Recency of activity
+
+Final output:
+
+```json
+{
+  "recommended_movies": [
+    {
+      "title": "The Dark Knight",
+      "genre": "Action",
+      "reason": "Based on your search history and favorites"
+    }
+  ]
+}
+
+
+#  3. Dynamic Updates
+
+Recommendations are automatically updated when:
+
+* User adds/removes favorites
+* User searches a movie
+* User views movie details
+
+This ensures real-time personalization.
+
+
+
+#  4. Key Idea
+
+The system follows a simple principle:
+
+> “The more the user interacts, the better the recommendations become.”
+
+It continuously learns from user behavior and improves accuracy over time.
+
+

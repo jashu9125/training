@@ -1,470 +1,488 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect
+} from "react";
+
 import { useNavigate } from "react-router-dom";
+
 import "./Movies.css";
 import config from "./config";
 
-import { toast } from "react-toastify";
-
 function Movies() {
-  const [movies, setMovies] = useState([]);
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [review, setReview] = useState("");
-  const [rating, setRating] = useState(0);
-  const [movieReviews, setMovieReviews] = useState({});
-  const [favoriteIds, setFavoriteIds] =
-  useState([]);
+  const [movies, setMovies] =
+    useState([]);
 
+  const [featuredMovie,
+    setFeaturedMovie] =
+    useState(null);
 
+  const [search, setSearch] =
+    useState("");
 
-const navigate = useNavigate();
+  const [loading, setLoading] =
+    useState(false);
 
+  const [error, setError] =
+    useState("");
 
-  // LOAD RECENT MOVIES
+  const [selectedMovie,
+    setSelectedMovie] =
+    useState(null);
+
+  const [review, setReview] =
+    useState("");
+
+  const [rating, setRating] =
+    useState(0);
+
+  const [movieReviews,
+    setMovieReviews] =
+    useState({});
+
+  const navigate =
+    useNavigate();
+
   useEffect(() => {
-    const recentMovies = localStorage.getItem("recentMovies");
+
+    const recentMovies =
+      localStorage.getItem(
+        "recentMovies"
+      );
 
     if (recentMovies) {
-      const parsedMovies = JSON.parse(recentMovies);
 
-      // ONLY VALID POSTER MOVIES
-      const filteredMovies = parsedMovies.filter((movie) =>
-        isValidPoster(movie.Poster)
-      );
+      const parsedMovies =
+        JSON.parse(recentMovies);
+
+      const filteredMovies =
+        parsedMovies.filter(
+          (movie) =>
+            movie &&
+            movie.Poster &&
+            movie.Poster !== "N/A"  &&
+            movie.Poster !== "" &&
+            movie.Poster.includes("http")
+        );
 
       setMovies(filteredMovies);
+
+      if (
+        filteredMovies.length > 0
+      ) {
+        setFeaturedMovie(
+          filteredMovies[0]
+        );
+      }
     }
+
   }, []);
 
-  // VALIDATE POSTER
-  const isValidPoster = (poster) => {
-    const p = (poster || "").trim();
+  const fetchMovies =
+    async () => {
 
-    return (
-      p.length > 0 &&
-      p !== "N/A" &&
-      p.toLowerCase() !== "null" &&
-      p.toLowerCase() !== "undefined" &&
-      p.startsWith("http")
-    );
-  };
+      if (!search.trim()) {
 
-const fetchMovies = async () => {
+        setError(
+          "Please enter movie name"
+        );
 
-  if (!search.trim()) {
-    setError("Please enter movie name");
-    return;
-  }
-
-  const token = localStorage.getItem("token");
-   console.log("TOKEN =", token);
-
-  if (!token) {
-    setError("Login required");
-    return;
-  }
-
-  try {
-
-    setLoading(true);
-    setError("");
-
-    // SEARCH MOVIES
-    const response = await fetch(
-      `${config.BASE_URL}/movies/search?title=${search}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        return;
       }
-    );
 
-    if (response.status === 401) {
-      setError("Session expired. Login again.");
-      return;
-    }
+      const token =
+        localStorage.getItem(
+          "token"
+        );
 
-    const data = await response.json();
+      if (!token) {
 
-    const moviesData = Array.isArray(data)
-      ? data
-      : [];
+        setError(
+          "Login required"
+        );
 
-    // FETCH FULL DETAILS FOR EACH MOVIE
-    const detailedMovies = await Promise.all(
+        return;
+      }
 
-  moviesData.map(async (movie) => {
+      try {
 
-    try {
+        setLoading(true);
 
-      console.log(
-        `${config.BASE_URL}/movies/id/${movie.imdbID}`
-      );
+        setError("");
 
-      // const res = await fetch(
-      //   `${config.BASE_URL}/movies/id/${movie.imdbID}`
-      // );
-
-      const res = await fetch(
-        `${config.BASE_URL}/movies/id/${movie.imdbID}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-          },
-          }
+        const response =
+          await fetch(
+            `${config.BASE_URL}/movies/search?title=${search}`,
+            {
+              headers: {
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
           );
 
-      const data = await res.json();
+        const data =
+          await response.json();
 
-      console.log("Movie Details:", data);
+        const moviesData =
+          Array.isArray(data)
+            ? data
+            : [];
 
-      return data;
+        const detailedMovies =
+          await Promise.all(
 
-    } catch (error) {
+            moviesData.map(
+              async (movie) => {
 
-      console.log(error);
+                try {
 
-      return movie;
-    }
-  })
+                  const res =
+                    await fetch(
+                      `${config.BASE_URL}/movies/id/${movie.imdbID}`,
+                      {
+                        headers: {
+                          Authorization:
+                            `Bearer ${token}`,
+                        },
+                      }
+                    );
 
-);
+                  return await res.json();
 
+                } catch {
 
-console.log("Detailed Movies:", detailedMovies);
-    // REMOVE INVALID POSTERS
-    const filteredMovies =
-      detailedMovies.filter(
-        (movie) =>
-          movie.Poster &&
-          movie.Poster !== "N/A" &&
-          movie.Poster.startsWith("http")
-      );
+                  return movie;
+                }
+              }
+            )
+          );
 
-    setMovies(filteredMovies);
+        const filteredMovies =
+          detailedMovies.filter(
+            (movie) =>
+              movie &&
+      movie.imdbID &&
+      movie.Title &&
+              movie.Poster &&
+              movie.Poster !== "N/A" &&
+              movie.Poster !== "" &&
+              movie.Poster.includes("http")
+          );
 
-    localStorage.setItem(
-      "recentMovies",
-      JSON.stringify(filteredMovies)
-    );
+        setMovies(
+          filteredMovies
+        );
 
-  } catch (err) {
-
-    console.log(err);
-
-    setError("Server Error");
-
-  } finally {
-
-    setLoading(false);
-  }
-};
-
-  // ADD TO FAVORITES
-  const addToFavorites = async (movie) => {
-    const token = localStorage.getItem("token");
-
-    try {
-      await fetch(`${config.BASE_URL}/favorites`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          movie_id: movie.imdbID,
-          title: movie.Title,
-          poster: movie.Poster,
-        }),
-      });
-
-      alert("Added to favorites");
-      window.dispatchEvent(
-      new Event("favoritesUpdated")
-    );
-    } catch (error) {
-      alert("Server Error");
-    }
-  };
-
-  // ADD REVIEW
-  const addReview = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!review.trim()) {
-      return alert("Enter review");
-    }
-
-    if (!rating) {
-      return alert("Select rating");
-    }
-
-    try {
-      const response = await fetch(
-        `${config.BASE_URL}/reviews`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            movie_id: selectedMovie.imdbID,
-            movie_title: selectedMovie.Title,
-            movie_poster: selectedMovie.Poster,
-            review,
-            rating,
-          }),
+        if (
+          filteredMovies.length > 0
+        ) {
+          setFeaturedMovie(
+            filteredMovies[0]
+          );
         }
-      );
 
-      if (!response.ok) {
-        const data = await response.json();
-        return alert(data.detail || "Failed");
+        localStorage.setItem(
+          "recentMovies",
+          JSON.stringify(
+            filteredMovies
+          )
+        );
+
+      } catch {
+
+        setError(
+          "Server Error"
+        );
+
+      } finally {
+
+        setLoading(false);
+      }
+    };
+
+  const addToFavorites =
+    async (movie) => {
+
+      const token =
+        localStorage.getItem(
+          "token"
+        );
+
+      try {
+
+        await fetch(
+          `${config.BASE_URL}/favorites`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+              Authorization:
+                `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              movie_id:
+                movie.imdbID,
+              title:
+                movie.Title,
+              poster:
+                movie.Poster,
+            }),
+          }
+        );
+
+        alert(
+          "Added to favorites"
+        );
+
+        window.dispatchEvent(
+          new Event(
+            "favoritesUpdated"
+          )
+        );
+
+      } catch {
+
+        alert(
+          "Server Error"
+        );
+      }
+    };
+
+  const addReview =
+    async () => {
+
+      const token =
+        localStorage.getItem(
+          "token"
+        );
+
+      if (!review.trim()) {
+        return alert(
+          "Enter review"
+        );
       }
 
-      setMovieReviews((prev) => ({
-        ...prev,
-        [selectedMovie.imdbID]: {
-          review,
-          rating,
-        },
-      }));
+      if (!rating) {
+        return alert(
+          "Select rating"
+        );
+      }
 
-      setSelectedMovie(null);
-      setReview("");
-      setRating(0);
+      try {
 
-      alert("Review Added");
-    } catch (error) {
-      alert("Server Error");
-    }
-  };
+        await fetch(
+          `${config.BASE_URL}/reviews`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+              Authorization:
+                `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              movie_id:
+                selectedMovie.imdbID,
+              movie_title:
+                selectedMovie.Title,
+              movie_poster:
+                selectedMovie.Poster,
+              review,
+              rating,
+            }),
+          }
+        );
+
+        setMovieReviews(
+          (prev) => ({
+            ...prev,
+            [selectedMovie.imdbID]:
+            {
+              review,
+              rating,
+            },
+          })
+        );
+
+        setSelectedMovie(
+          null
+        );
+
+        setReview("");
+
+        setRating(0);
+
+        alert(
+          "Review Added"
+        );
+
+      } catch {
+
+        alert(
+          "Server Error"
+        );
+      }
+    };
 
   return (
-    <div className="container">
 
-      {/* HEADING */}
-      <h1 className="heading">
-        🎬 Movie Search App
-      </h1>
+    <>
 
-      {/* SEARCH BOX */}
-      <div className="searchBox">
+      {featuredMovie && (
 
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) =>
-            e.key === "Enter" && fetchMovies()
-          }
-          placeholder="Search movies..."
-          className="input"
-        />
-
-        <button
-          onClick={fetchMovies}
-          className="searchButton"
+        <div
+          className="heroSection"
+          style={{
+            backgroundImage:
+              `url(${featuredMovie.Poster})`,
+          }}
         >
-          Search
-        </button>
 
-      </div>
+          <div
+            className="heroOverlay"
+          >
 
-      {/* LOADING */}
-      {loading && <h3>Loading...</h3>}
-
-      {/* ERROR */}
-      {error && (
-        <h3 className="error">
-          {error}
-        </h3>
-      )}
-
-      {/* EMPTY */}
-      {!loading && movies.length === 0 && (
-        <h3 className="empty">
-          No movies found
-        </h3>
-      )}
-
-      {/* MOVIES GRID */}
-      <div className="grid">
-
-        {movies.map((movie, index) => {
-
-          // ❌ REMOVE INVALID IMAGES
-          if (
-            !movie.Poster ||
-            movie.Poster === "N/A" ||
-            movie.Poster === "null" ||
-            movie.Poster === "undefined" ||
-            !movie.Poster.startsWith("http")
-          ) {
-            return null;
-          }
-
-          // ✅ SHOW ONLY VALID IMAGE MOVIES
-          return (
-            <div
-              key={movie.imdbID || index}
-              className="card"
-              onClick={() => navigate(`/movie/${movie.imdbID}`)}
+            <h1
+              className="heroTitle"
             >
+              Movie Applications
+            </h1>
 
-              {/* MOVIE IMAGE */}
-              <img
-                src={movie.Poster}
-                alt={movie.Title}
-                className="image"
+            <h2
+              className="heroMovieTitle"
+            >
+              {featuredMovie.Title}
+            </h2>
 
-                // ❌ HIDE BROKEN IMAGE CARD
-                onError={(e) => {
-                  e.target.closest(".card").style.display =
-                    "none";
-                }}
-              />
+            <p
+              className="heroDescription"
+            >
+              {featuredMovie.Plot}
+            </p>
 
-              {/* MOVIE TITLE */}
-              <h3 className="movieTitle">
-                {movie.Title}
-              </h3>
-
-              {/* MOVIE YEAR */}
-              <p className="movieText">
-                Year: {movie.Year}
-              </p>
-
-              <p className="movieText">
-                  Genre: {movie.Genre}
-              </p>
-
-              <p className="movieText">
-                  IMDb: ⭐ {movie.imdbRating}
-              </p>
-
-              <p className="moviePlot">
-                  {movie.Plot?.substring(0, 100)}...
-              </p>
-
-
-              {/* FAVORITES BUTTON */}
-
-              <button
-                className="favoriteButton"
-                 onClick={() =>
-                 addToFavorites(movie)
+            <button
+              className="heroButton"
+              onClick={() =>
+                navigate(
+                  `/movie/${featuredMovie.imdbID}`
+                )
               }
-              >
-               {favoriteIds.includes(movie.imdbID)
-               ? "❤️ Saved"
-              : "🤍 Add to Favorites"}
-              </button>
+            >
+              ▶ Watch Now
+            </button>
 
+          </div>
 
-              {/* REVIEW BUTTON */}
-              <button
-                className="reviewBtn"
-                onClick={() => {
-                  setSelectedMovie(movie);
-                  setReview("");
-                  setRating(0);
-                }}
-              >
-                ⭐ Add Review
-              </button>
+        </div>
 
-              {/* SHOW REVIEW */}
-              {movieReviews[movie.imdbID] && (
-                <div className="reviewCard">
+      )}
 
-                  <h4 className="reviewStars">
-                    {"★".repeat(
-                      movieReviews[movie.imdbID]
-                        .rating
-                    )}
-                  </h4>
+      <div className="container">
 
-                  <p className="reviewText">
-                    {
-                      movieReviews[movie.imdbID]
-                        .review
-                    }
-                  </p>
+        <div className="searchBox">
 
-                </div>
-              )}
+          <input
+            type="text"
+            value={search}
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+            placeholder="Search movies..."
+            className="input"
+          />
 
-            </div>
-          );
-        })}
+          <button
+            onClick={
+              fetchMovies
+            }
+            className="searchButton"
+          >
+            Search
+          </button>
 
-      </div>
+        </div>
 
-   {/* REVIEW MODAL */}
-{selectedMovie && (
-  <div className="modalOverlay">
+        {loading && (
+          <h3>Loading...</h3>
+        )}
 
-    <div className="modalBox">
+        {error && (
+          <h3>{error}</h3>
+        )}
 
-      <button
-        className="closeBtn"
-        onClick={() => setSelectedMovie(null)}
-      >
-        ✕
-      </button>
+        <div className="grid">
+
+          {movies
+  .filter(
+    (movie) =>
+      movie.Poster &&
+      movie.Poster !== "N/A"
+  )
+  .map((movie) => (
+
+    <div
+      key={movie.imdbID}
+      className="card"
+    >
 
       <img
-        src={selectedMovie.Poster}
-        alt={selectedMovie.Title}
-        className="modalImage"
-      />
+  src={movie.Poster}
+  alt={movie.Title}
+  className="image"
+  onError={() => {
 
-      <h2 className="modalTitle">
-        {selectedMovie.Title}
-      </h2>
+    setMovies((prev) =>
+      prev.filter(
+        (m) => m.imdbID !== movie.imdbID
+      )
+    );
 
-      <textarea
-        className="reviewTextarea"
-        value={review}
-        onChange={(e) => setReview(e.target.value)}
-        placeholder="Share your thoughts about this movie..."
-      />
+  }}
+  onClick={() =>
+    navigate(`/movie/${movie.imdbID}`)
+  }
+/>
 
-      <div className="ratingContainer">
-        {[1, 2, 3, 4, 5].map((s) => (
-          <span
-            key={s}
-            onClick={() => setRating(s)}
-            className={
-              s <= rating
-                ? "activeStar"
-                : "star"
-            }
-          >
-            ★
-          </span>
-        ))}
-      </div>
+      <h3 className="movieTitle">
+        {movie.Title}
+      </h3>
+
+      <p className="movieText">
+        {movie.Year}
+      </p>
 
       <button
-        className="submitReviewBtn"
-        onClick={addReview}
+        className="favoriteButton"
+        onClick={() =>
+          addToFavorites(movie)
+        }
       >
-        Submit Review
+        Add To Favorites
+      </button>
+
+      <button
+        className="reviewBtn"
+        onClick={() =>
+          setSelectedMovie(movie)
+        }
+      >
+        Add Review
       </button>
 
     </div>
 
-  </div>
-)} 
+))}
 
-    </div>
+        </div>
+
+      </div>
+
+    </>
+
   );
 }
 

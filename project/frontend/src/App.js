@@ -25,6 +25,8 @@ import Favorites from "./Favorites";
 import MovieDetails from "./MovieDetails";
 import ProtectedRoute from "./ProtectedRoute";
 
+import Recommendations from "./Recommendations";
+
 import "./App.css";
 
 function App() {
@@ -174,6 +176,13 @@ useEffect(() => {
               Favorites ({favCount})
             </Link>
 
+            <Link
+  to="/recommendations"
+  className="nav-link"
+>
+  Recommendations
+</Link>
+
             <button
               onClick={handleLogout}
               className="logout-btn"
@@ -215,6 +224,15 @@ useEffect(() => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+  path="/recommendations"
+  element={
+    <ProtectedRoute>
+      <Recommendations />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/movie/:imdbID"

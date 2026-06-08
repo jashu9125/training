@@ -1,0 +1,106 @@
+.movie-page{
+  background:#141414;
+  min-height:100vh;
+}
+
+.hero-banner{
+  height:90vh;
+  background-size:cover;
+  background-position:center;
+}
+
+.overlay{
+  width:100%;
+  height:100%;
+  background:linear-gradient(
+    to right,
+    rgba(0,0,0,.95),
+    rgba(0,0,0,.6)
+  );
+}
+
+.hero-content{
+  max-width:1300px;
+  height:100%;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:50px;
+  padding:50px;
+}
+
+.poster{
+  width:300px;
+  height:450px;
+  border-radius:10px;
+  object-fit:cover;
+}
+
+.info{
+  color:white;
+}
+
+.info h1{
+  font-size:60px;
+  margin-bottom:20px;
+}
+
+.rating-box{
+  display:inline-block;
+  background:#e50914;
+  padding:12px 18px;
+  border-radius:5px;
+  margin-bottom:20px;
+}
+
+.genres{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.tag{
+  background:#333;
+  color:white;
+  padding:8px 15px;
+  border-radius:20px;
+}
+
+.year{
+  margin-bottom:20px;
+}
+
+.book-btn{
+  background:#e50914;
+  color:white;
+  border:none;
+  padding:15px 30px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.about-section{
+  max-width:1200px;
+  margin:auto;
+  padding:50px;
+  color:white;
+}
+
+.about-section h2{
+  margin-bottom:20px;
+}
+
+.details-grid{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  margin-top:30px;
+}
+
+.details-grid div{
+  background:#1f1f1f;
+  padding:20px;
+  border-radius:8px;
+}

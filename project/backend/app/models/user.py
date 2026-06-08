@@ -4,6 +4,9 @@ from sqlalchemy.orm import relationship
 
 from app.database.database import Base
 
+from app.models.view_history import ViewHistory
+from app.models.user_preference import UserPreference
+
 class User(Base):
 
     __tablename__ = "users"
@@ -42,4 +45,14 @@ class User(Base):
         "SearchHistory",
         backref="user",
         cascade="all, delete"
+    )
+
+    view_history = relationship(
+    "ViewHistory",
+    backref="user"
+    )
+
+    preferences = relationship(
+    "UserPreference",
+    backref="user"
     )

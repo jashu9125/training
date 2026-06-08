@@ -1,406 +1,475 @@
-body {
-  margin: 0;
-  padding: 0;
-  background: #f4f4f4;
-  font-family: Arial, sans-serif;
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-/* CONTAINER */
-.container {
-  padding: 20px;
-  min-height: 100vh;
-  background: #f3f4f6;
+body{
+  background:#141414;
+  color:white;
+  font-family:Arial, Helvetica, sans-serif;
 }
 
-/* HEADING */
-.heading {
-  text-align: center;
-  color: #111827;
-  margin-bottom: 20px;
-  font-size: 40px;
+/* =========================
+   HERO SECTION
+========================= */
+
+.heroSection{
+  height:85vh;
+  background-size:cover;
+  background-position:center;
+  position:relative;
 }
 
-/* SEARCH BOX */
-.searchBox {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 30px;
+.heroOverlay{
+  width:100%;
+  height:100%;
+  background:linear-gradient(
+    to right,
+    rgba(0,0,0,.95),
+    rgba(0,0,0,.6),
+    rgba(0,0,0,.2)
+  );
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-left:70px;
 }
 
-/* INPUT */
-.input {
-  width: 300px;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  outline: none;
-  font-size: 16px;
+.heroTitle{
+  font-size:70px;
+  color:#e50914;
+  font-weight:900;
+  margin-bottom:20px;
 }
 
-/* SEARCH BUTTON */
-.searchButton {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #111827;
-  color: white;
-  cursor: pointer;
+.heroMovieTitle{
+  font-size:55px;
+  margin-bottom:15px;
 }
 
-.searchButton:hover {
-  background: black;
+.heroDescription{
+  width:600px;
+  line-height:1.8;
+  color:#ddd;
+  margin-bottom:25px;
 }
 
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
+.heroButton{
+  width:220px;
+  padding:15px;
+  border:none;
+  border-radius:5px;
+  background:#e50914;
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-/* CARD */
-.card {
-  background: white;
-  padding: 15px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+.heroButton:hover{
+  background:#ff1f2f;
 }
 
-/* IMAGE */
-.image {
-  width: 100%;
-  height: 340px;
-  object-fit: cover;
-  border-radius: 10px;
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+  padding:30px 50px;
 }
 
-/* TITLE */
-.movieTitle {
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* =========================
+   SEARCH
+========================= */
+
+.searchBox{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:40px;
 }
 
-/* TEXT */
-.movieText {
-  color: gray;
+.input{
+  width:450px;
+  padding:15px;
+  border:none;
+  border-radius:5px;
+  font-size:16px;
 }
 
-/* FAVORITE BUTTON */
-.favoriteButton {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
+.searchButton{
+  background:#e50914;
+  color:white;
+  border:none;
+  padding:15px 25px;
+  border-radius:5px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-.favoriteButton:hover {
-  background: linear-gradient(135deg, #36d1dc, #5b86e5);
+.searchButton:hover{
+  background:#ff1f2f;
 }
 
-/* REVIEW BUTTON */
-.reviewBtn {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #8e54e9;
-  color: white;
-  cursor: pointer;
+/* =========================
+   MOVIE GRID
+========================= */
+.grid{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fill,minmax(250px,1fr));
+  gap:25px;
 }
 
-.reviewBtn:hover {
-  background: #7e22ce;
+.card{
+  background:#1e293b;
+  border-radius:15px;
+  overflow:hidden;
+  transition:.3s;
 }
 
-/* ERROR / EMPTY */
-.error {
-  text-align: center;
-  color: red;
+.image{
+  width:100%;
+  height:380px;
+  object-fit:cover;
 }
 
-.empty {
-  text-align: center;
-  color: gray;
+.card:hover{
+  transform:scale(1.05);
 }
 
-/* REVIEW CARD */
-.reviewCard {
-  margin-top: 15px;
-  background: #f5f5f5;
-  padding: 10px;
-  border-radius: 10px;
+
+.movieTitle{
+  font-size:20px;
+  padding:15px;
+  font-weight:bold;
 }
 
-.reviewStars {
-  color: gold;
-  margin: 0;
+.movieText{
+  padding:0 15px;
+  color:#aaa;
+  margin-bottom:10px;
 }
 
-.reviewText {
-  margin-top: 5px;
+.moviePlot{
+  padding:0 15px;
+  color:#ccc;
+  font-size:14px;
+  line-height:1.5;
+  min-height:70px;
 }
 
-/* MODAL */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+/* =========================
+   BUTTONS
+========================= */
+
+.favoriteButton{
+  width:90%;
+  margin:10px auto;
+  display:block;
+  background:#e50914;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:5px;
+  cursor:pointer;
 }
 
-.modalBox {
-  width: 400px;
-  background: white;
-  padding: 25px;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+.favoriteButton:hover{
+  background:#ff1f2f;
 }
 
-.closeBtn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  border: none;
-  background: transparent;
-  font-size: 22px;
-  cursor: pointer;
-  color: red;
+.reviewBtn{
+  width:90%;
+  margin:10px auto 20px;
+  display:block;
+  background:#333;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:5px;
+  cursor:pointer;
 }
 
-/* MODAL IMAGE */
-.modalImage {
-  width: 180px;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 15px;
+.reviewBtn:hover{
+  background:#444;
 }
 
-/* REVIEW INPUT */
-.reviewInput {
-  width: 100%;
-  min-height: 80px;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  resize: none;
+/* =========================
+   REVIEW CARD
+========================= */
+
+.reviewCard{
+  padding:15px;
+  border-top:1px solid #333;
 }
 
-/* STARS */
-.star {
-  font-size: 32px;
-  cursor: pointer;
-  color: gray;
+.reviewStars{
+  color:gold;
+  margin-bottom:10px;
 }
 
-.activeStar {
-  font-size: 32px;
-  cursor: pointer;
-  color: gold;
+.reviewText{
+  color:#ccc;
 }
 
-/* SUBMIT */
-.submitReviewBtn {
-  width: 100%;
-  margin-top: 15px;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: green;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
+/* =========================
+   MODAL
+========================= */
+
+.modalOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
 }
 
-.submitReviewBtn:hover {
-  background: darkgreen;
+.modalBox{
+  width:500px;
+  background:#181818;
+  padding:25px;
+  border-radius:12px;
+  position:relative;
 }
 
-/* MOBILE */
-@media screen and (max-width: 768px) {
-  .heading {
-    font-size: 28px;
+.closeBtn{
+  position:absolute;
+  top:10px;
+  right:15px;
+  background:none;
+  border:none;
+  color:white;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.modalImage{
+  width:180px;
+  height:250px;
+  object-fit:cover;
+  display:block;
+  margin:auto;
+  border-radius:10px;
+}
+
+.modalTitle{
+  text-align:center;
+  margin:15px 0;
+}
+
+.reviewTextarea{
+  width:100%;
+  height:120px;
+  border:none;
+  border-radius:8px;
+  padding:10px;
+  margin-top:15px;
+}
+
+.ratingContainer{
+  text-align:center;
+  margin-top:15px;
+}
+
+.star{
+  font-size:35px;
+  color:#666;
+  cursor:pointer;
+}
+
+.activeStar{
+  font-size:35px;
+  color:gold;
+  cursor:pointer;
+}
+
+.submitReviewBtn{
+  width:100%;
+  margin-top:20px;
+  background:#e50914;
+  color:white;
+  border:none;
+  padding:14px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+/* =========================
+   EMPTY / ERROR
+========================= */
+
+.error{
+  text-align:center;
+  color:#ff4444;
+}
+
+.empty{
+  text-align:center;
+  color:#aaa;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+  .heroOverlay{
+    padding:30px;
   }
 
-  .searchBox {
-    flex-direction: column;
+  .heroTitle{
+    font-size:40px;
   }
 
-  .input {
-    width: 100%;
+  .heroMovieTitle{
+    font-size:30px;
   }
 
-  .modalBox {
-    width: 90%;
-  }
-}
-
-.favorites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  align-items: stretch;
-}
-
-/* CONTAINER */
-.favorites-container {
-  padding: 20px;
-  min-height: 100vh;
-  background: #f3f4f6;
-}
-
-/* TITLE */
-.favorites-title {
-  text-align: center;
-  font-size: 40px;
-  margin-bottom: 30px;
-  color: #111827;
-}
-
-/* EMPTY STATE */
-.no-favorites {
-  text-align: center;
-  color: gray;
-  font-size: 18px;
-}
-
-/* GRID (SAME AS MOVIES GRID) */
-.favorites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 25px;
-}
-
-/* CARD (EXACT SAME AS MOVIES CARD) */
-.favorite-card {
-  background: white;
-  padding: 15px;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.favorite-card:hover {
-  transform: translateY(-5px);
-}
-
-/* IMAGE (SAME SIZE AS MOVIES) */
-.favorite-image {
-  width: 100%;
-  height: 340px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-/* TITLE */
-.favorite-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 10px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* REMOVE BUTTON */
-.remove-btn {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #ff4b2b, #ff416c);
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: 0.3s ease;
-}
-
-.remove-btn:hover {
-  transform: scale(1.05);
-}
-
-.details-container {
-  min-height: 100vh;
-  background: #f3f4f6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 30px;
-}
-
-.details-card {
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
-  display: flex;
-  gap: 30px;
-  max-width: 1000px;
-  width: 100%;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-}
-
-.details-image {
-  width: 320px;
-  border-radius: 12px;
-}
-
-.details-content {
-  flex: 1;
-}
-
-.details-content h1 {
-  margin-bottom: 20px;
-}
-
-.details-content p {
-  margin-bottom: 15px;
-  line-height: 1.7;
-}
-
-@media (max-width: 768px) {
-  .details-card {
-    flex-direction: column;
+  .heroDescription{
+    width:100%;
   }
 
-  .details-image {
-    width: 100%;
+  .searchBox{
+    flex-direction:column;
+  }
+
+  .input{
+    width:100%;
+  }
+
+  .container{
+    padding:20px;
   }
 }
 
 
-.moviePlot {
-  font-size: 13px;
-  color: #555;
-  margin-top: 1px;
-  line-height: 1.2;
-  height: 60px;
-  overflow: hidden;
+/* Register */
+.register-container{
+  min-height:100vh;
+  background:#141414;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.movieText {
-  margin: 3px 0;
-  font-size: 14px;
+.register-form{
+  width:420px;
+  background:#181818;
+  padding:40px;
+  border-radius:10px;
+}
+
+.register-heading{
+  text-align:center;
+  color:white;
+  margin-bottom:25px;
+}
+
+.register-form label{
+  color:white;
+  display:block;
+  margin-bottom:8px;
+}
+
+.register-input{
+  width:100%;
+  padding:12px;
+  margin-bottom:20px;
+  border:none;
+  border-radius:5px;
+  background:#2a2a2a;
+  color:white;
+}
+
+.register-button{
+  width:100%;
+  background:#e50914;
+  color:white;
+  border:none;
+  padding:14px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.register-button:hover{
+  background:#ff2020;
+}
+
+.register-error{
+  background:#ff4444;
+  color:white;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:5px;
+}
+
+.register-success{
+  background:#22c55e;
+  color:white;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:5px;
+}
+
+/* Favorites */
+/* FORCE FAVORITES GRID */
+
+.favorites-grid{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:20px !important;
+  justify-content:flex-start !important;
+}
+
+.favorite-card{
+  width:220px !important;
+  min-width:220px !important;
+  max-width:220px !important;
+  background:#1e293b !important;
+  border-radius:15px !important;
+  overflow:hidden !important;
+}
+
+.favorite-image{
+  width:100% !important;
+  height:320px !important;
+  object-fit:cover !important;
+}
+
+.bms-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:25px;
+  justify-content:flex-start;
+  overflow:visible !important;
+  width:100%;
+}
+
+.bms-card{
+  width:250px;
+  min-width:250px;
+  flex:0 0 250px;
+  background:#181818;
+  border-radius:10px;
+  overflow:hidden;
+  transition:.3s;
+}
+
+.bms-card:hover{
+  transform:scale(1.05);
+}
+
+.bms-poster{
+  width:100%;
+  height:350px;
+  object-fit:cover;
 }

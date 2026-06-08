@@ -120,3 +120,23 @@ export const deleteFavorite = async (movie_id) => {
 
   return await response.json();
 };
+
+export const getRecommendations =
+async () => {
+
+  const token =
+    localStorage.getItem("token");
+
+  const response =
+    await fetch(
+      `${BASE_URL}/recommendations`,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${token}`,
+        },
+      }
+    );
+
+  return await response.json();
+};
