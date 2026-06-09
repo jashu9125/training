@@ -28,6 +28,8 @@ from app.routes import preferences   # ✅ FIXED (correct import)
 
 from app.utils.exceptions import validation_exception_handler
 
+from fastapi.middleware.cors import CORSMiddleware
+
 
 # =========================
 # CREATE TABLES (DEBUG)

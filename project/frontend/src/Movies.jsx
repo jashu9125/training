@@ -36,9 +36,9 @@ function Movies() {
   const [rating, setRating] =
     useState(0);
 
-  const [movieReviews,
-    setMovieReviews] =
-    useState({});
+  // const [movieReviews,
+  //   setMovieReviews] =
+  //   useState({});
 
   const navigate =
     useNavigate();

@@ -1,118 +1,181 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  useParams,
+  useNavigate,
+} from "react-router-dom";
+
 import config from "./config";
+
 import "./MovieDetails.css";
 
 function MovieDetails() {
-  const { imdbID } = useParams();
 
-  const [movie, setMovie] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { imdbID } =
+    useParams();
+
+  const navigate =
+    useNavigate();
+
+  const [movie, setMovie] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
+
+    const fetchMovie =
+      async () => {
+
+        try {
+
+          const token =
+            localStorage.getItem(
+              "token"
+            );
+
+          const response =
+            await fetch(
+              `${config.BASE_URL}/movies/id/${imdbID}`,
+              {
+                headers: {
+                  Authorization:
+                    `Bearer ${token}`,
+                },
+              }
+            );
+
+          const data =
+            await response.json();
+
+          setMovie(data);
+
+        } catch (error) {
+
+          console.log(
+            "Movie Details Error:",
+            error
+          );
+
+        } finally {
+
+          setLoading(false);
+
+        }
+      };
+
     fetchMovie();
+
   }, [imdbID]);
 
-  const fetchMovie = async () => {
-    try {
-      const response = await fetch(
-        `${config.BASE_URL}/movies/id/${imdbID}`
-      );
+  if (loading) {
 
-      const data = await response.json();
-
-      setMovie(data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) return <h2>Loading...</h2>;
-
-  return (
-    <div className="movie-page">
-
-      <div
-        className="hero-banner"
+    return (
+      <h2
         style={{
-          backgroundImage: `url(${movie.Poster})`,
+          color: "white",
+          textAlign: "center",
+          marginTop: "50px",
         }}
       >
-        <div className="overlay">
+        Loading...
+      </h2>
+    );
+  }
 
-          <div className="hero-content">
+  if (!movie) {
 
-            <img
-              src={movie.Poster}
-              alt={movie.Title}
-              className="poster"
-            />
+    return (
+      <h2
+        style={{
+          color: "white",
+          textAlign: "center",
+          marginTop: "50px",
+        }}
+      >
+        Movie Not Found
+      </h2>
+    );
+  }
 
-            <div className="info">
+  return (
 
-              <h1>{movie.Title}</h1>
+    <div className="detailsContainer">
 
-              <div className="rating-box">
-                ⭐ {movie.imdbRating}/10 IMDb
-              </div>
+      <button
+        className="backBtn"
+        onClick={() => navigate(-1)}
+      >
+        ← Back
+      </button>
 
-              <div className="genres">
-                {movie.Genre?.split(",").map(
-                  (g, index) => (
-                    <span
-                      key={index}
-                      className="tag"
-                    >
-                      {g}
-                    </span>
-                  )
-                )}
-              </div>
+      <div className="detailsCard">
 
-              <p className="year">
-                {movie.Year}
-              </p>
+        <img
+          src={movie.Poster}
+          alt={movie.Title}
+          className="detailsPoster"
+        />
 
-              <button className="book-btn">
-                Watch Now
-              </button>
+        <div className="detailsInfo">
 
-            </div>
+          <h1>
+            {movie.Title}
+          </h1>
 
-          </div>
+          <p>
+            <strong>
+              Year:
+            </strong>{" "}
+            {movie.Year}
+          </p>
 
-        </div>
-      </div>
+          <p>
+            <strong>
+              Genre:
+            </strong>{" "}
+            {movie.Genre}
+          </p>
 
-      <div className="about-section">
+          <p>
+            <strong>
+              Runtime:
+            </strong>{" "}
+            {movie.Runtime}
+          </p>
 
-        <h2>About Movie</h2>
+          <p>
+            <strong>
+              Director:
+            </strong>{" "}
+            {movie.Director}
+          </p>
 
-        <p>{movie.Plot}</p>
+          <p>
+            <strong>
+              Actors:
+            </strong>{" "}
+            {movie.Actors}
+          </p>
 
-        <div className="details-grid">
+          <p>
+            <strong>
+              IMDb Rating:
+            </strong>{" "}
+            {movie.imdbRating}
+          </p>
 
-          <div>
-            <strong>Director</strong>
-            <p>{movie.Director}</p>
-          </div>
-
-          <div>
-            <strong>Actors</strong>
-            <p>{movie.Actors}</p>
-          </div>
-
-          <div>
-            <strong>Language</strong>
-            <p>{movie.Language}</p>
-          </div>
-
-          <div>
-            <strong>Runtime</strong>
-            <p>{movie.Runtime}</p>
-          </div>
+          <p className="plotText">
+            <strong>
+              Plot:
+            </strong>
+            <br />
+            {movie.Plot}
+          </p>
 
         </div>
 

@@ -2,9 +2,8 @@ import React, {
   useState
 } from "react";
 
-import {
-  useNavigate
-} from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 
 import {
   toast
@@ -57,7 +56,8 @@ function LoginPage() {
 
       toast.success("Login Successful");
 
-      window.location.href = "/movies";
+      navigate("/movies");
+      // window.location.href = "/movies";
 
 
     } catch (err) {
